@@ -1,0 +1,2199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4f1ec" />
+<title>The Supervision Council</title>
+<meta name="description" content="The Supervision Council — collective wisdom for reflexive practice. A structured reflective tool for coaches in receipt of supervision." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4f1ec;
+    --surface: #ffffff;
+    --text: #1e2d45;
+    --muted: #5a6a80;
+    --accent: #3d8aa8;
+    --accent-soft: #5b9db5;
+    --border: #dde3ec;
+    --alert: #8b2030;
+    --field: #fdfcfa;
+
+    --serif-display: "Cinzel", "Times New Roman", serif;
+    --serif-body: "Crimson Pro", Georgia, serif;
+
+    --tracked: 0.14em;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+
+    --shadow-soft: 0 1px 2px rgba(30, 45, 69, 0.05), 0 6px 22px rgba(30, 45, 69, 0.06);
+    --shadow-card: 0 1px 1px rgba(30, 45, 69, 0.04), 0 2px 10px rgba(30, 45, 69, 0.05);
+
+    --max-width: 540px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif-body);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(61, 138, 168, 0.05), transparent 45%),
+      radial-gradient(circle at 80% 100%, rgba(61, 138, 168, 0.04), transparent 50%),
+      var(--bg);
+  }
+
+  .app {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 28px 22px 64px;
+  }
+
+  /* ---------- Typography ---------- */
+
+  h1, h2, h3, h4 {
+    font-family: var(--serif-display);
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin: 0 0 0.6em;
+  }
+  h1 { font-size: 1.7rem; line-height: 1.2; }
+  h2 { font-size: 1.25rem; line-height: 1.25; }
+  h3 { font-size: 1.05rem; line-height: 1.3; }
+  h4 { font-size: 0.95rem; line-height: 1.3; }
+
+  p { margin: 0 0 1em; }
+  p:last-child { margin-bottom: 0; }
+
+  .label {
+    font-family: var(--serif-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .muted { color: var(--muted); }
+  .small { font-size: 0.85rem; }
+
+  /* ---------- Screens ---------- */
+
+  .screen {
+    display: none;
+    animation: fadeIn 380ms ease-out;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Landing ---------- */
+
+  .hero {
+    text-align: center;
+    padding: 18px 0 8px;
+  }
+  .hero-icon {
+    font-size: 56px;
+    line-height: 1;
+    display: inline-block;
+    animation: breathe 5.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(30, 45, 69, 0.08));
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.95; }
+    50%      { transform: scale(1.06); opacity: 1; }
+  }
+  .hero-title {
+    font-family: var(--serif-display);
+    font-size: 1.9rem;
+    font-weight: 500;
+    margin: 18px 0 6px;
+    letter-spacing: 0.04em;
+  }
+  .hero-subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0 0 10px;
+  }
+  .hero-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+    margin: 22px auto 4px;
+    border: 0;
+  }
+
+  /* ---------- Cards ---------- */
+
+  .mode-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .mode-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    color: inherit;
+    font-family: var(--serif-body);
+    font-size: 1rem;
+    transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    box-shadow: var(--shadow-card);
+  }
+  .mode-card:hover {
+    border-color: var(--accent-soft);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+  .mode-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .mode-card .icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .mode-card .body { flex: 1; }
+  .mode-card .title {
+    font-family: var(--serif-display);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0 0 4px;
+    letter-spacing: 0.02em;
+  }
+  .mode-card .desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ---------- Panels & blocks ---------- */
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .panel.flush { margin-bottom: 0; }
+
+  .panel-label {
+    font-family: var(--serif-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--accent);
+    font-weight: 500;
+    margin: 0 0 8px;
+    display: block;
+  }
+
+  .quiet-note {
+    background: rgba(61, 138, 168, 0.06);
+    border: 1px solid rgba(61, 138, 168, 0.18);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .quiet-note strong { font-weight: 600; }
+
+  .alert {
+    background: rgba(139, 32, 48, 0.06);
+    border: 1px solid rgba(139, 32, 48, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--alert);
+    font-size: 0.9rem;
+    margin-top: 12px;
+  }
+  .alert strong { font-weight: 600; }
+
+  /* ---------- Inputs ---------- */
+
+  textarea, input[type="text"] {
+    width: 100%;
+    background: var(--field);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-family: var(--serif-body);
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+  textarea { min-height: 130px; }
+  textarea.short { min-height: 80px; }
+  textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(61, 138, 168, 0.14);
+  }
+  textarea::placeholder, input::placeholder {
+    color: #9aa6b6;
+    font-style: italic;
+  }
+
+  .field-group { margin-bottom: 16px; }
+  .field-group label {
+    display: block;
+    font-family: var(--serif-display);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--text);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .field-hint {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ---------- Buttons ---------- */
+
+  .btn {
+    appearance: none;
+    border: 0;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--serif-display);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    padding: 13px 22px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 180ms ease, transform 120ms ease;
+    font-weight: 500;
+  }
+  .btn:hover { background: #336f88; }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .btn-secondary:hover { background: rgba(61, 138, 168, 0.08); }
+
+  .btn-quiet {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-quiet:hover { color: var(--text); border-color: var(--accent-soft); }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  .btn-row.center { justify-content: center; }
+  .btn-row.between { justify-content: space-between; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-bottom: 18px;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: var(--serif-body);
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link::before {
+    content: "←";
+    font-size: 1rem;
+  }
+
+  /* ---------- Thinking screens ---------- */
+
+  .thinking {
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+  .thinking-text {
+    font-family: var(--serif-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .dots {
+    display: inline-flex;
+    gap: 8px;
+  }
+  .dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.4;
+    animation: dot 1.3s ease-in-out infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.18s; }
+  .dots span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes dot {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+    40%           { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* ---------- Lens cards ---------- */
+
+  .lens-block {
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--border);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .lens-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .lens-icon { font-size: 1.6rem; line-height: 1; }
+  .lens-name {
+    font-family: var(--serif-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    margin: 0;
+    font-weight: 500;
+  }
+  .lens-theme {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .lens-reason {
+    font-size: 0.95rem;
+    margin: 0 0 14px;
+    color: var(--text);
+  }
+  .lens-questions {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    counter-reset: q;
+  }
+  .lens-questions li {
+    counter-increment: q;
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 10px;
+    font-size: 0.97rem;
+    line-height: 1.5;
+  }
+  .lens-questions li:last-child { margin-bottom: 0; }
+  .lens-questions li::before {
+    content: counter(q);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--serif-display);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(61, 138, 168, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .lens-blindspot {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+  }
+  .lens-blindspot strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ---------- Domain section ---------- */
+
+  .domain-header {
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  .domain-name {
+    font-family: var(--serif-display);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--accent);
+    margin: 0 0 4px;
+    font-weight: 500;
+  }
+  .domain-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* ---------- Summary view ---------- */
+
+  .summary-header {
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+  .summary-header .label { color: var(--accent); }
+  .summary-section { margin-bottom: 22px; }
+  .summary-section .label { display: block; margin-bottom: 6px; }
+  .summary-section p { white-space: pre-wrap; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ---------- Group supervision ---------- */
+
+  .role-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .phase-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+  }
+  .phase-num {
+    font-family: var(--serif-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--accent);
+    margin: 0;
+  }
+  .phase-title {
+    font-family: var(--serif-display);
+    font-size: 1.05rem;
+    margin: 2px 0 0;
+    font-weight: 500;
+  }
+  .timer {
+    font-family: var(--serif-display);
+    font-size: 1.4rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+  .timer.warn { color: var(--alert); }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+  .checklist li {
+    padding: 8px 0 8px 26px;
+    position: relative;
+    font-size: 0.95rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  .checklist li:last-child { border-bottom: 0; }
+  .checklist li::before {
+    content: "○";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    color: var(--accent);
+  }
+
+  .domain-cluster {
+    margin-bottom: 14px;
+  }
+  .domain-cluster-name {
+    font-family: var(--serif-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracked);
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+  .animal-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .animal-pill {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    background: var(--field);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ---------- Footer ---------- */
+
+  .app-footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .app-footer a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--border);
+  }
+  .app-footer a:hover { color: var(--accent); }
+
+  /* ---------- Utility ---------- */
+
+  .stack > * + * { margin-top: 16px; }
+  .center { text-align: center; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: LANDING                                                      -->
+  <!-- =================================================================== -->
+  <section class="screen active" id="screen-landing">
+    <div class="hero">
+      <div class="hero-icon" aria-hidden="true">🌈</div>
+      <h1 class="hero-title">The Supervision Council</h1>
+      <p class="hero-subtitle">Collective wisdom for reflexive practice</p>
+      <hr class="hero-rule" />
+    </div>
+
+    <div class="mode-grid">
+      <button class="mode-card" data-go="sp-case">
+        <span class="icon" aria-hidden="true">🌱</span>
+        <span class="body">
+          <span class="title">Supervision Prep</span>
+          <span class="desc">Prepare a topic to bring to your next human supervision session.</span>
+        </span>
+      </button>
+
+      <button class="mode-card" data-go="ss-case">
+        <span class="icon" aria-hidden="true">🌿</span>
+        <span class="body">
+          <span class="title">Self-Supervision</span>
+          <span class="desc">Structured reflective practice between supervision sessions.</span>
+        </span>
+      </button>
+
+      <button class="mode-card" data-go="gs-setup">
+        <span class="icon" aria-hidden="true">🌳</span>
+        <span class="body">
+          <span class="title">Group Supervision</span>
+          <span class="desc">Run a live group supervision session using animal lenses as observer roles.</span>
+        </span>
+      </button>
+
+      <button class="mode-card" data-go="screen-explore">
+        <span class="icon" aria-hidden="true">🍃</span>
+        <span class="body">
+          <span class="title">Explore the Animals</span>
+          <span class="desc">The twelve perspectives, what each notices, and where each can mislead.</span>
+        </span>
+      </button>
+
+      <button class="mode-card" data-go="screen-about">
+        <span class="icon" aria-hidden="true">🌾</span>
+        <span class="body">
+          <span class="title">About this App</span>
+          <span class="desc">What this is, what it can offer, and what it can't.</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="app-footer">
+      &copy; <span id="year"></span> Neil Ralph Associates. All rights reserved.
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — CASE INPUT                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-case">
+    <button class="back-link" data-go="screen-landing">Back</button>
+    <span class="label">Supervision Prep</span>
+    <h2>What would you like to bring to supervision?</h2>
+
+    <div class="quiet-note">
+      <strong>Before you write:</strong> please remove all identifying details about your client (name, role, organisation, distinctive context). Your clients have not consented to their situations being processed by an AI. The text you submit is sent to an external AI language model.
+    </div>
+
+    <div class="field-group">
+      <textarea id="sp-case-input" rows="8" placeholder="It might be a specific client situation, a theme across several clients, a pattern in your own practice, a question about your professional development, or something else that has been sitting with you. What is this situation bringing up in you as a practitioner?"></textarea>
+      <div id="sp-edge-alert" class="alert hidden" role="alert"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="sp-case-continue">Continue</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — THINKING 1                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-think1">
+    <div class="thinking">
+      <p class="thinking-text">Reading what you're bringing…</p>
+      <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — CLARIFICATION                             -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-clarify">
+    <span class="label">Supervision Prep</span>
+    <h2>Sharpening the picture</h2>
+
+    <div class="panel">
+      <span class="panel-label">What I understand you are bringing</span>
+      <p id="sp-clarify-summary"></p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">To sharpen the picture</span>
+      <ol id="sp-clarify-questions" style="margin: 0; padding-left: 1.2em;"></ol>
+    </div>
+
+    <div class="field-group">
+      <label for="sp-clarify-response">Your response</label>
+      <textarea id="sp-clarify-response" class="short" placeholder="Respond to the questions, correct anything I have misunderstood, or add anything else that feels relevant."></textarea>
+      <div class="field-hint">You can leave this blank if the summary captures it well.</div>
+    </div>
+
+    <div class="field-group">
+      <label for="sp-outcome">Your outcome for this session</label>
+      <textarea id="sp-outcome" class="short" placeholder="What does a good outcome from this supervision session look like for you?"></textarea>
+      <div id="sp-advice-notice" class="quiet-note hidden">
+        <strong>A gentle note.</strong> Supervision works differently from consultancy or mentoring — your supervisor will not tell you what to do, but will work with you to gain perspective and identify your own options. You may want to reframe what you are hoping for.
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="sp-clarify-continue">Continue</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — THINKING 2                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-think2">
+    <div class="thinking">
+      <p class="thinking-text">Selecting your perspectives…</p>
+      <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — FOCUS                                     -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-focus">
+    <span class="label">Supervision Prep</span>
+    <h2>Your perspectives</h2>
+
+    <div class="panel">
+      <span class="panel-label">Why these perspectives</span>
+      <p id="sp-focus-rationale"></p>
+    </div>
+
+    <div id="sp-focus-lenses"></div>
+
+    <div class="field-group" style="margin-top: 24px;">
+      <label for="sp-intention">My intention going into supervision</label>
+      <textarea id="sp-intention" placeholder="Having thought through these perspectives, what is the most important thing you want to bring to supervision? What do you most need your supervisor to know?"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="sp-focus-continue">Continue</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SUPERVISION PREP — SUMMARY                                   -->
+  <!-- =================================================================== -->
+  <section class="screen" id="sp-summary">
+    <div class="summary-header">
+      <span class="label">Supervision Preparation Note</span>
+      <p class="muted small" id="sp-summary-date" style="margin-top:4px;"></p>
+    </div>
+
+    <div id="sp-summary-body"></div>
+
+    <p class="footer-note">Prepared using a structured reflective tool. A starting point for supervision, not a replacement for it.</p>
+
+    <div class="btn-row">
+      <button class="btn" id="sp-copy">Copy to clipboard</button>
+      <button class="btn-quiet btn" data-go="screen-landing">Return to start</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — CASE INPUT                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-case">
+    <button class="back-link" data-go="screen-landing">Back</button>
+    <span class="label">Self-Supervision</span>
+    <h2>What is sitting with you?</h2>
+
+    <div class="quiet-note">
+      <strong>Before you write:</strong> please remove all identifying details about your client (name, role, organisation, distinctive context). Your clients have not consented to their situations being processed by an AI. The text you submit is sent to an external AI language model.
+    </div>
+
+    <div class="field-group">
+      <textarea id="ss-case-input" rows="8" placeholder="It might be a specific client situation, a theme across several clients, a pattern in your own practice, a question about your own professional development, or something else that has been sitting with you. What this situation brings up in me is…"></textarea>
+      <div id="ss-edge-alert" class="alert hidden" role="alert"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="ss-case-continue">Continue</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — THINKING 1                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-think1">
+    <div class="thinking">
+      <p class="thinking-text">Reading what you're bringing…</p>
+      <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — CLARIFICATION                             -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-clarify">
+    <span class="label">Self-Supervision</span>
+    <h2>Sharpening the picture</h2>
+
+    <div class="panel">
+      <span class="panel-label">What I understand you are bringing</span>
+      <p id="ss-clarify-summary"></p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">To sharpen the picture</span>
+      <ol id="ss-clarify-questions" style="margin: 0; padding-left: 1.2em;"></ol>
+    </div>
+
+    <div class="field-group">
+      <label for="ss-clarify-response">Your response</label>
+      <textarea id="ss-clarify-response" class="short" placeholder="Respond to the questions, correct anything I have misunderstood, or add anything else that feels relevant."></textarea>
+      <div class="field-hint">You can leave this blank if the summary captures it well.</div>
+    </div>
+
+    <div class="field-group">
+      <label for="ss-outcome">Your outcome for this session</label>
+      <textarea id="ss-outcome" class="short" placeholder="What does a good outcome from this session look like for you?"></textarea>
+      <div id="ss-advice-notice" class="quiet-note hidden">
+        <strong>A gentle note.</strong> Self-supervision is not about finding answers or being told what to do. The aim is to gain perspective and to surface what has not yet been examined. You may want to reframe what you are hoping for.
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="ss-clarify-continue">Select My Perspectives</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — THINKING 2                                -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-think2">
+    <div class="thinking">
+      <p class="thinking-text">Selecting your perspectives…</p>
+      <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — REFLECT                                   -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-reflect">
+    <span class="label">Self-Supervision</span>
+    <h2>Your reflection</h2>
+
+    <div class="panel">
+      <span class="panel-label">Before the lenses — what your body is telling you</span>
+      <p class="muted small" style="margin: 0 0 10px;">Pause for a moment. What are you feeling in your body in relation to this situation?</p>
+      <textarea id="ss-somatic" class="short" placeholder="Tightness, openness, weight, restlessness, warmth, fatigue — whatever is here."></textarea>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Why these perspectives</span>
+      <p id="ss-reflect-rationale"></p>
+    </div>
+
+    <div id="ss-reflect-lenses"></div>
+
+    <div class="panel" style="margin-top: 24px;">
+      <span class="panel-label">The unsettling question</span>
+      <p class="muted small" style="margin: 0 0 10px;">What is the question you have been hoping not to be asked about this?</p>
+      <textarea id="ss-unsettling" class="short" placeholder="The question you would rather avoid."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="ss-reflect-continue">Continue</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: SELF-SUPERVISION — SUMMARY                                   -->
+  <!-- =================================================================== -->
+  <section class="screen" id="ss-summary">
+    <div class="summary-header">
+      <span class="label">The Supervision Council: Self-Supervision</span>
+      <p class="muted small" id="ss-summary-date" style="margin-top:4px;"></p>
+    </div>
+
+    <div id="ss-summary-body"></div>
+
+    <p class="footer-note">A reflective record. Not a substitute for human supervision.</p>
+
+    <div class="btn-row">
+      <button class="btn" id="ss-copy">Copy to clipboard</button>
+      <button class="btn-quiet btn" data-go="screen-landing">Return to start</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — SETUP                                    -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-setup">
+    <button class="back-link" data-go="screen-landing">Back</button>
+    <span class="label">Group Supervision</span>
+    <h2>A facilitation companion</h2>
+
+    <p class="muted">A live group supervision session in five phases, totalling thirty minutes. The app does not use AI in this mode. It supports the human conversation by holding the structure, the timing, and the lenses.</p>
+
+    <div class="panel">
+      <span class="panel-label">The roles</span>
+      <p><strong>Supervisee</strong> — the coach bringing a case.</p>
+      <p><strong>Supervisor and Timekeeper</strong> — facilitates and holds time.</p>
+      <p><strong>Observers</strong> — each holds one animal lens and listens through it.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">The phases</span>
+      <p><strong>1.</strong> Set-up and contracting · 3 min</p>
+      <p><strong>2.</strong> Live supervision conversation · 10 min</p>
+      <p><strong>3.</strong> Animal perspectives · 10 min</p>
+      <p><strong>4.</strong> Supervisee reflection · 5 min</p>
+      <p><strong>5.</strong> Closing reflection · 2 min</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="gs-begin">Begin Session</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — PHASE 1                                  -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-phase1">
+    <div class="phase-banner">
+      <div>
+        <p class="phase-num">Phase 1 · 3 min</p>
+        <p class="phase-title">Set-up and Contracting</p>
+      </div>
+      <div class="timer" id="gs-timer-1">3:00</div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Supervisor checklist</span>
+      <ul class="checklist">
+        <li>Brief the group on the five-phase structure</li>
+        <li>Assign one animal lens to each observer</li>
+        <li>Confirm the supervisee is ready</li>
+        <li>Agree confidentiality and the contract for this session</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Available lenses, by domain</span>
+      <div id="gs-lens-list"></div>
+    </div>
+
+    <div class="btn-row between">
+      <button class="btn-quiet btn" id="gs-timer-1-toggle">Start timer</button>
+      <button class="btn" data-go="gs-phase2" id="gs-phase1-next">Next: Conversation</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — PHASE 2                                  -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-phase2">
+    <div class="phase-banner">
+      <div>
+        <p class="phase-num">Phase 2 · 10 min</p>
+        <p class="phase-title">Live Supervision Conversation</p>
+      </div>
+      <div class="timer" id="gs-timer-2">10:00</div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Process</span>
+      <p>The supervisee presents their case to the supervisor. Observers listen in silence and notice what arises through their assigned lens.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Observers — your lens</span>
+      <p class="muted small">Each observer holds one of the twelve lenses. Reference your lens here:</p>
+      <div id="gs-phase2-lenses" style="margin-top: 10px;"></div>
+    </div>
+
+    <div class="btn-row between">
+      <button class="btn-quiet btn" id="gs-timer-2-toggle">Start timer</button>
+      <button class="btn" data-go="gs-phase3">Next: Perspectives</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — PHASE 3                                  -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-phase3">
+    <div class="phase-banner">
+      <div>
+        <p class="phase-num">Phase 3 · 10 min</p>
+        <p class="phase-title">Animal Perspectives</p>
+      </div>
+      <div class="timer" id="gs-timer-3">10:00</div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Process</span>
+      <p>Each observer offers their lens questions to the supervisee. The supervisor facilitates — pacing the contributions, holding space for the supervisee to respond, and noticing what is emerging across the perspectives.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">All twelve perspectives, by domain</span>
+      <div id="gs-phase3-list"></div>
+    </div>
+
+    <div class="btn-row between">
+      <button class="btn-quiet btn" id="gs-timer-3-toggle">Start timer</button>
+      <button class="btn" data-go="gs-phase4">Next: Reflection</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — PHASE 4                                  -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-phase4">
+    <div class="phase-banner">
+      <div>
+        <p class="phase-num">Phase 4 · 5 min</p>
+        <p class="phase-title">Supervisee Reflection</p>
+      </div>
+      <div class="timer" id="gs-timer-4">5:00</div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Process</span>
+      <p>The supervisee reflects aloud on what has emerged. Observers and supervisor listen without interjecting.</p>
+      <p class="muted small">Possible prompts the supervisor may offer:</p>
+      <ul class="checklist">
+        <li>What perspective landed most for you?</li>
+        <li>What has shifted in how you see this?</li>
+        <li>What is becoming clearer about what you want to do next?</li>
+      </ul>
+    </div>
+
+    <div class="btn-row between">
+      <button class="btn-quiet btn" id="gs-timer-4-toggle">Start timer</button>
+      <button class="btn" data-go="gs-phase5">Next: Closing</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: GROUP SUPERVISION — PHASE 5                                  -->
+  <!-- =================================================================== -->
+  <section class="screen" id="gs-phase5">
+    <div class="phase-banner">
+      <div>
+        <p class="phase-num">Phase 5 · 2 min</p>
+        <p class="phase-title">Closing Reflection</p>
+      </div>
+      <div class="timer" id="gs-timer-5">2:00</div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Closing</span>
+      <p>Each member offers a brief closing reflection. The supervisee is invited to name one thing they are taking away.</p>
+    </div>
+
+    <div class="btn-row between">
+      <button class="btn-quiet btn" id="gs-timer-5-toggle">Start timer</button>
+      <button class="btn" data-go="screen-landing">Return to start</button>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: EXPLORE THE ANIMALS                                          -->
+  <!-- =================================================================== -->
+  <section class="screen" id="screen-explore">
+    <button class="back-link" data-go="screen-landing">Back</button>
+    <span class="label">Explore the Animals</span>
+    <h2>The twelve perspectives</h2>
+
+    <p class="muted">Each animal is a lens — a distinct way of attending to the work. Together they hold the four supervisory domains: formative, normative, restorative, and generative. They are used in all three modes.</p>
+    <p class="muted small" style="font-style: italic;">These perspectives were originally inspired by the animals of the Chinese Zodiac, reimagined for coaching supervision practice.</p>
+
+    <div id="explore-list" style="margin-top: 24px;"></div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!-- SCREEN: ABOUT                                                        -->
+  <!-- =================================================================== -->
+  <section class="screen" id="screen-about">
+    <button class="back-link" data-go="screen-landing">Back</button>
+    <span class="label">About this app</span>
+    <h2>What this is, and what it isn't</h2>
+
+    <div class="panel">
+      <span class="panel-label">What it does</span>
+      <p>The Supervision Council uses twelve animal perspectives, each representing a distinct supervisory lens, to help coaches think more broadly about their cases and practice. It has three functional modes: <strong>Supervision Prep</strong> (preparing for a human supervision session), <strong>Self-Supervision</strong> (structured reflective practice between sessions), and <strong>Group Supervision</strong> (supporting a live group supervision session). In the two AI-powered modes, the app reads what you have written and selects the most relevant lenses, generating coaching questions tailored to your specific situation.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">What it can honestly offer</span>
+      <p>A structured reflective space between supervision sessions. Multiple perspectives on a single situation. Coaching questions that may surface what has not yet been examined. A preparation tool that helps you arrive at human supervision more focused and articulate.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Honest limitations</span>
+      <p>The app is not supervision. It cannot replicate the relational, parallel process, or accountability dimensions of human supervision.</p>
+      <p>It has no memory between sessions and cannot track themes or development over time.</p>
+      <p>It cannot replace the professional judgment of a qualified supervisor.</p>
+      <p>It should not be used as a substitute for human supervision, particularly where ethical concerns, safeguarding issues, or significant professional risk are present.</p>
+      <p>The twelve animal perspectives were originally inspired by the animals of the Chinese Zodiac, reimagined for coaching supervision practice.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Confidentiality</span>
+      <p>Content submitted to the app is processed by an external AI language model. Please do not include identifying information about your clients. Sessions are not stored — the app holds nothing between visits.</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">When to seek human supervision</span>
+      <p>If your situation involves a safeguarding concern, risk of serious harm, suicidal ideation, or a significant ethical dilemma, please seek human supervision or appropriate professional support directly. The app will flag language of this kind, but the responsibility to act sits with you.</p>
+    </div>
+
+    <div class="app-footer" style="margin-top: 28px;">
+      &copy; <span class="year-inline"></span> Neil Ralph Associates. All rights reserved.
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ====================================================================== */
+/* DATA: ANIMALS, DOMAINS                                                 */
+/* ====================================================================== */
+
+const ANIMALS = {
+  // Formative
+  eagle: {
+    name: "Eagle", icon: "🦅", domain: "formative",
+    theme: "Vision, Ambition and Transformation",
+    notices: "the supervisee's sense of what is possible for their client; limiting beliefs about what coaching can achieve; the boldest version of the client's potential; where the coaching has become too small or too safe.",
+    questions: [
+      "What is the boldest version of what this client could achieve, and what stands between them and it?",
+      "Is the coaching oriented towards real transformation, or just incremental adjustment?",
+      "What does the client most deeply want, beneath what they are asking for?"
+    ],
+    blindspot: "Grandiosity; losing sight of what is realistic or wanted by the client.",
+    bg: "rgba(35,110,80,0.08)", border: "rgba(35,110,80,0.28)"
+  },
+  tiger: {
+    name: "Tiger", icon: "🐯", domain: "formative",
+    theme: "Challenge, Stretch and Avoidance",
+    notices: "collusion between coach and client; comfort zones being protected; unspoken issues; what the coach is carefully avoiding saying.",
+    questions: [
+      "Where am I playing safe in this work?",
+      "What is not being said, by me or by my client?",
+      "What risk do I need to take in the next session?"
+    ],
+    blindspot: "Challenging for its own sake; overwhelming the client or coach.",
+    bg: "rgba(160,75,30,0.08)", border: "rgba(160,75,30,0.28)"
+  },
+  monkey: {
+    name: "Monkey", icon: "🐒", domain: "formative",
+    theme: "Experiment, Intervention and Craft",
+    notices: "the specific interventions and questions being used; what the coach defaults to; what has not been tried; the micro-skills and tactical choices in the work.",
+    questions: [
+      "What could I try differently in the next session?",
+      "Which of my recent interventions landed, and which did not, and why?",
+      "What am I defaulting to that I should question?"
+    ],
+    blindspot: "Becoming scattered or overly tactical; losing sight of the relational whole.",
+    bg: "rgba(35,80,150,0.08)", border: "rgba(35,80,150,0.28)"
+  },
+
+  // Normative
+  swan: {
+    name: "Swan", icon: "🦢", domain: "normative",
+    theme: "Contract, Frame and Ethics",
+    notices: "the clarity and health of the coaching contract; where the frame has blurred; ethical edges; whether what is happening is still coaching; scope of practice questions.",
+    questions: [
+      "Is this still coaching? Is the contract clear and being held?",
+      "Where do boundaries need tightening or revisiting?",
+      "Are there ethical or safeguarding edges here that need attention?"
+    ],
+    blindspot: "Becoming rigid or procedural; losing the relational quality in the service of the frame.",
+    bg: "rgba(60,80,140,0.08)", border: "rgba(60,80,140,0.28)"
+  },
+  owl: {
+    name: "Owl", icon: "🦉", domain: "normative",
+    theme: "Clarity, Precision and Truth-Telling",
+    notices: "vagueness and oblique naming; what the coach is observing but not saying; where precision is being avoided; the moment when something needs to be named plainly.",
+    questions: [
+      "What am I seeing in this case that I am not yet saying out loud?",
+      "Where is vagueness or polite indirection preventing the work from sharpening?",
+      "What would it mean to name this exactly as it is, and what is stopping me?"
+    ],
+    blindspot: "Bluntness without care; truth-telling that damages rather than serves.",
+    bg: "rgba(120,90,25,0.08)", border: "rgba(120,90,25,0.28)"
+  },
+  dog: {
+    name: "Dog", icon: "🐕", domain: "normative",
+    theme: "Loyalty, Duty and Allegiances",
+    notices: "whose interests the coach is most loyal to; unconscious allegiances; where duty is guiding or constraining; dynamics of power, culture, and difference; whose needs are really being served.",
+    questions: [
+      "Whose interests am I most loyal to in this work, and is that loyalty conscious and chosen?",
+      "What dynamics of power, culture, or difference might be present here that I have not yet examined?",
+      "Where is my sense of professional duty guiding me well, and where might it be limiting what I can see?"
+    ],
+    blindspot: "Becoming so alert to systemic dynamics that the immediate relational and practical dimensions of the work are overlooked.",
+    bg: "rgba(110,70,30,0.08)", border: "rgba(110,70,30,0.28)"
+  },
+
+  // Restorative
+  rabbit: {
+    name: "Rabbit", icon: "🐇", domain: "restorative",
+    theme: "Relationship, Safety and Alliance",
+    notices: "the quality of trust in the coaching relationship; emotional climate; pace; whether there is sufficient safety for meaningful work; where someone may feel exposed or defended.",
+    questions: [
+      "What does the coaching relationship need right now to stay workable?",
+      "Where might my client feel exposed or defended, and how am I responding to that?",
+      "Am I moving at the right pace for this person?"
+    ],
+    blindspot: "Prioritising safety over necessary challenge; avoiding difficulty in the name of the relationship.",
+    bg: "rgba(120,60,140,0.08)", border: "rgba(120,60,140,0.28)"
+  },
+  deer: {
+    name: "Deer", icon: "🦌", domain: "restorative",
+    theme: "Vulnerability, Care and the Unspoken Need",
+    notices: "what the client has not yet been able to ask for; what is being carried quietly; the coach's embodied and somatic responses; how the coach's own history and emotional life shape their presence and care.",
+    questions: [
+      "What is this client carrying that they have not yet been able to name, and how do I know?",
+      "What am I feeling in my body in relation to this person, and what might that be telling me?",
+      "How is my own history or emotional life shaping the care I am bringing, and is that serving this client?"
+    ],
+    blindspot: "Becoming so attuned to vulnerability that the work loses its capacity to challenge.",
+    bg: "rgba(60,120,70,0.08)", border: "rgba(60,120,70,0.28)"
+  },
+  bear: {
+    name: "Bear", icon: "🐻", domain: "restorative",
+    theme: "Meaning, Nourishment and Sufficiency",
+    notices: "what meaning the client is making of their experience; what genuinely sustains coach and client; depletion; whether what matters most is receiving sufficient attention.",
+    questions: [
+      "What meaning is this client making of their experience, and is that meaning serving them?",
+      "What is genuinely nourishing about this work, and what is depleting it?",
+      "What matters most to this client, and is the coaching attending to that with enough weight?"
+    ],
+    blindspot: "Complacency; mistaking comfort for sufficiency.",
+    bg: "rgba(110,40,80,0.08)", border: "rgba(110,40,80,0.28)"
+  },
+
+  // Generative
+  beaver: {
+    name: "Beaver", icon: "🦫", domain: "generative",
+    theme: "Resources, Sustainability and Adaptive Capacity",
+    notices: "what the coach and client are drawing on; depletion and over-reliance; systemic and organisational pressures; constraints that may be open to challenge; adaptive capacity.",
+    questions: [
+      "What resources, inner, relational and practical, am I actually drawing on, and what is going untapped?",
+      "Where is depletion showing up in me, in my client, or in the conditions we are both working within?",
+      "What constraints am I treating as fixed that might in fact be open to challenge or negotiation?"
+    ],
+    blindspot: "Becoming so focused on what is available that what is structurally absent goes unquestioned.",
+    bg: "rgba(40,80,120,0.08)", border: "rgba(40,80,120,0.28)"
+  },
+  wolf: {
+    name: "Wolf", icon: "🐺", domain: "generative",
+    theme: "Sense-making, Pattern and Timing",
+    notices: "recurring patterns across cases; parallel process; the coach's own perceptual and experiential lens; systemic dynamics; what the coach's responses reveal about their own assumptions and history.",
+    questions: [
+      "What pattern keeps appearing in this work, and where else have I encountered it?",
+      "What is this situation activating in me, and what does that tell me about my own lens as a practitioner?",
+      "Is what is recurring personal, relational, or structural in origin?"
+    ],
+    blindspot: "Finding patterns everywhere; losing sight of what is genuinely new or particular.",
+    bg: "rgba(35,100,80,0.08)", border: "rgba(35,100,80,0.28)"
+  },
+  horse: {
+    name: "Horse", icon: "🐎", domain: "generative",
+    theme: "Direction, Energy and Movement",
+    notices: "whether the coaching is actually moving the client; drift and stagnation; loss of momentum; whether the coach is colluding with a comfortable lack of progress.",
+    questions: [
+      "Is this coaching actually moving the client, and in what direction?",
+      "Where is drift or stagnation showing up, and am I colluding with it?",
+      "What shift in direction or pace is needed from me?"
+    ],
+    blindspot: "Impatience; prioritising movement over what the client actually needs.",
+    bg: "rgba(150,40,55,0.08)", border: "rgba(150,40,55,0.28)"
+  }
+};
+
+const DOMAINS = {
+  formative: {
+    name: "Formative",
+    description: "Supervision that supports the coach's learning and professional development.",
+    lenses: ["eagle", "tiger", "monkey"]
+  },
+  normative: {
+    name: "Normative",
+    description: "Supervision that attends to professional standards, ethics, and the boundaries of the coaching role.",
+    lenses: ["swan", "owl", "dog"]
+  },
+  restorative: {
+    name: "Restorative",
+    description: "Supervision that attends to the coach's inner experience, wellbeing, and the relational quality of the work.",
+    lenses: ["rabbit", "deer", "bear"]
+  },
+  generative: {
+    name: "Generative",
+    description: "Supervision that attends to patterns across practice, sustainability over time, and the coach's capacity to adapt and renew.",
+    lenses: ["beaver", "wolf", "horse"]
+  }
+};
+
+const DOMAIN_ORDER = ["formative", "normative", "restorative", "generative"];
+
+/* ====================================================================== */
+/* ETHICAL EDGE DETECTION                                                 */
+/* ====================================================================== */
+
+const ETHICS_PATTERNS = [
+  {
+    pattern: /\b(suicid|kill (my|him|her|them)self|end (my|his|her|their) life|take (my|his|her|their) (own )?life|self[- ]?harm|cutting (my|him|her)self|hurt (my|him|her|them)self)\b/i,
+    message: "What you've described suggests possible risk to life. Please raise this in human supervision urgently, and consider whether the person involved needs immediate clinical or crisis support. This app is not appropriate for this kind of concern."
+  },
+  {
+    pattern: /\b(safeguarding|child(?:ren)? at risk|abuse|grooming|domestic violence|coercive control|vulnerable adult)\b/i,
+    message: "What you've described may involve a safeguarding concern. Please consult your supervisor and any relevant safeguarding lead urgently. Do not rely on this app to think this through."
+  },
+  {
+    pattern: /\b(serious harm|imminent danger|threat(?:ening)? to (kill|harm)|violence (against|towards))\b/i,
+    message: "What you've described suggests risk of serious harm. Please raise this with your supervisor urgently, and consider whether the situation warrants other professional or emergency intervention."
+  },
+  {
+    pattern: /\b(ethical (dilemma|breach|concern)|conflict of interest|breach of (confidentiality|contract)|reportable|whistle[- ]?blow)\b/i,
+    message: "What you've described sounds like it may have a significant ethical dimension. This is exactly the kind of issue that needs human supervision rather than reflective preparation alone."
+  }
+];
+
+function checkEthicalEdge(text) {
+  for (const p of ETHICS_PATTERNS) {
+    if (p.pattern.test(text)) return p.message;
+  }
+  return null;
+}
+
+const ADVICE_SEEKING_PATTERNS = [
+  /\b(tell me what to do|what should i do|the right answer|the answer|give me advice|advise me|fix (this|it|the))\b/i,
+  /\b(solve (this|it|the)|the solution|recommend (a|the) (way|approach|step)|what is the best way to)\b/i,
+  /\b(an action plan|next steps to take|step[- ]by[- ]step|a clear plan)\b/i
+];
+
+function looksLikeAdviceSeeking(text) {
+  if (!text) return false;
+  return ADVICE_SEEKING_PATTERNS.some(p => p.test(text));
+}
+
+/* ====================================================================== */
+/* STATE                                                                  */
+/* ====================================================================== */
+
+const ss = {
+  caseText: "",
+  clarifySummary: "",
+  clarifyQuestions: [],
+  clarifyResponse: "",
+  outcome: "",
+  domain: "",
+  rationale: "",
+  lenses: [],          // [{ key, reason, questions, reflection }]
+  somatic: "",
+  unsettling: ""
+};
+
+const sp = {
+  caseText: "",
+  clarifySummary: "",
+  clarifyQuestions: [],
+  clarifyResponse: "",
+  outcome: "",
+  domain: "",
+  rationale: "",
+  lenses: [],
+  intention: ""
+};
+
+/* ====================================================================== */
+/* NAVIGATION                                                             */
+/* ====================================================================== */
+
+function goTo(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+}
+
+document.querySelectorAll("[data-go]").forEach(btn => {
+  btn.addEventListener("click", () => goTo(btn.getAttribute("data-go")));
+});
+
+/* ====================================================================== */
+/* INIT FOOTER YEAR                                                       */
+/* ====================================================================== */
+
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+document.querySelectorAll(".year-inline").forEach(el => el.textContent = new Date().getFullYear());
+
+/* ====================================================================== */
+/* HTML ESCAPING                                                          */
+/* ====================================================================== */
+
+function esc(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/* ====================================================================== */
+/* ETHICAL EDGE LIVE WIRING                                               */
+/* ====================================================================== */
+
+function wireEdgeDetection(inputId, alertId) {
+  const input = document.getElementById(inputId);
+  const alert = document.getElementById(alertId);
+  if (!input || !alert) return;
+  let last = "";
+  input.addEventListener("input", () => {
+    const text = input.value;
+    if (text === last) return;
+    last = text;
+    const msg = checkEthicalEdge(text);
+    if (msg) {
+      alert.innerHTML = "<strong>A note from the app.</strong> " + esc(msg);
+      alert.classList.remove("hidden");
+    } else {
+      alert.classList.add("hidden");
+    }
+  });
+}
+wireEdgeDetection("sp-case-input", "sp-edge-alert");
+wireEdgeDetection("ss-case-input", "ss-edge-alert");
+
+/* ====================================================================== */
+/* ADVICE-SEEKING NOTICE WIRING                                           */
+/* ====================================================================== */
+
+function wireAdviceNotice(outcomeId, noticeId) {
+  const input = document.getElementById(outcomeId);
+  const notice = document.getElementById(noticeId);
+  if (!input || !notice) return;
+  input.addEventListener("input", () => {
+    if (looksLikeAdviceSeeking(input.value)) {
+      notice.classList.remove("hidden");
+    } else {
+      notice.classList.add("hidden");
+    }
+  });
+}
+wireAdviceNotice("sp-outcome", "sp-advice-notice");
+wireAdviceNotice("ss-outcome", "ss-advice-notice");
+
+/* ====================================================================== */
+/* AI: API CALL                                                           */
+/* ====================================================================== */
+
+async function callAI(systemPrompt, userPrompt) {
+  const response = await fetch("/api/claude", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1500,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => "");
+    throw new Error("API error " + response.status + ": " + errText.slice(0, 300));
+  }
+
+  const data = await response.json();
+  const text = (data && data.content || [])
+    .filter(b => b.type === "text")
+    .map(b => b.text)
+    .join("\n")
+    .trim();
+
+  // Strip code fences if Claude wraps the JSON
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/^```\s*/, "").replace(/```\s*$/, "").trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    // Try to find a JSON object inside the response
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) {
+      try { return JSON.parse(match[0]); } catch (e2) { /* fall through */ }
+    }
+    throw new Error("Could not parse AI response as JSON. Raw response: " + cleaned.slice(0, 300));
+  }
+}
+
+/* ====================================================================== */
+/* AI: PROMPTS                                                            */
+/* ====================================================================== */
+
+const SYSTEM_CALL_1 = `You are a reflective companion for a coaching supervisee, working as part of a structured tool called The Supervision Council. You are NOT offering advice, opinions, or interpretation. You read what a supervisee has written, and you reflect it back so they can see it more clearly, and you ask one or two focused questions that sharpen the picture.
+
+You always respond ONLY with a single JSON object, no preamble, no markdown, no code fences. The JSON object has exactly three keys:
+
+{
+  "summary": "A 2 to 3 sentence plain-language summary of what the supervisee is bringing, written directly to them in second person (you, your). Warm and clear. Do not interpret. Do not add things they did not say. Do not soften or sharpen the emotional tone — reflect what is actually there.",
+  "questions": ["A focused clarifying question.", "Optionally a second clarifying question."],
+  "domain": "formative" | "normative" | "restorative" | "generative"
+}
+
+Domain definitions (used internally — never shown to the supervisee):
+- formative: the supervisee's own learning and professional development; their craft and skill
+- normative: professional standards, ethics, contract, boundaries, scope of practice, dynamics of power and difference
+- restorative: the supervisee's wellbeing, the relational quality of their work, what they are carrying
+- generative: patterns across practice, sustainability, recurring themes, capacity to adapt and renew
+
+Choose the single domain that best fits the dominant signal. If genuinely split, pick the one that would most usefully shape the perspectives offered next.
+
+Provide exactly one or two questions in "questions". Questions are short, specific, and serve to clarify — not to challenge or interpret.`;
+
+function buildSystemCall2(modeContext) {
+  return `You are a reflective companion for a coaching supervisee, working as part of a structured tool called The Supervision Council. You are NOT offering advice, opinions, or interpretation. You select 2 or 3 of twelve animal lenses that will best help this supervisee think more clearly about what they are bringing, and you generate coaching questions tailored to their situation through each lens.
+
+${modeContext}
+
+You always respond ONLY with a single JSON object, no preamble, no markdown, no code fences. The JSON object has exactly two keys:
+
+{
+  "rationale": "A short paragraph (2 to 3 sentences) written directly to the supervisee in second person, explaining why these particular perspectives have been chosen for what they have brought. Warm, clear, specific to their situation.",
+  "lenses": [
+    {
+      "key": "<one of: swan, eagle, tiger, rabbit, horse, deer, monkey, owl, dog, bear, beaver, wolf>",
+      "reason": "One sentence written directly to the supervisee in second person explaining why this lens is relevant to their specific situation.",
+      "questions": ["Question 1?", "Question 2?", "Question 3?"]
+    }
+  ]
+}
+
+Constraints:
+- Select 2 or 3 lenses. Never just 1, never more than 3.
+- All twelve keys are valid: swan, eagle, tiger, rabbit, horse, deer, monkey, owl, dog, bear, beaver, wolf.
+- The supervisory domain signal you receive is a guide, not a constraint. Lens selection is based on the actual content of what the supervisee has brought.
+- Each lens must have exactly 3 questions.
+- All questions are tailored to the specific situation — never generic.
+- All questions use I, my, you, or your — first or second person, never third person.
+- Questions never offer advice, interpretation, or instruction. They open up thinking, they do not close it down.
+- The "reason" field is in second person (you, your), never third person (the coach).
+
+The twelve lenses, briefly:
+
+FORMATIVE (the supervisee's learning and craft):
+- eagle: vision, ambition, transformation; the boldest version of what is possible
+- tiger: challenge, stretch, avoidance; what is not being said; where the work is too safe
+- monkey: experiment, intervention, craft; the specific moves the coach is making; tactical choices
+
+NORMATIVE (standards, ethics, frame):
+- swan: contract, frame, ethics; whether this is still coaching; scope of practice
+- owl: clarity, precision, truth-telling; vagueness; what needs to be named
+- dog: loyalty, duty, allegiances; whose interests are being served; power, culture, difference
+
+RESTORATIVE (wellbeing and relationship):
+- rabbit: relationship, safety, alliance; trust; pace; emotional climate
+- deer: vulnerability, care, the unspoken need; the somatic and embodied; the supervisee's own emotional life
+- bear: meaning, nourishment, sufficiency; what sustains; depletion; what matters most
+
+GENERATIVE (patterns, sustainability):
+- beaver: resources, sustainability, adaptive capacity; what is being drawn on; constraints
+- wolf: sense-making, pattern, timing; recurring patterns; parallel process; the coach's own lens
+- horse: direction, energy, movement; whether the work is moving; drift; momentum`;
+}
+
+const MODE_CONTEXT_PREP = `MODE: Supervision Prep. The supervisee is preparing for a forthcoming human supervision session. Questions should be FORWARD-FACING and PREPARATION-ORIENTED — they help the supervisee articulate what they are bringing, what they want from supervision, and what they want their supervisor to know. They sharpen the supervisee's own thinking before the session.`;
+
+const MODE_CONTEXT_SELF = `MODE: Self-Supervision. The supervisee is doing structured reflective practice between supervision sessions. Questions should be REFLECTIVE and INQUIRY-ORIENTED — they help the supervisee deepen their understanding of what is happening and surface what has not yet been examined. The aim is not resolution but sharper reflection.`;
+
+/* ====================================================================== */
+/* RENDERING: LENS BLOCKS                                                 */
+/* ====================================================================== */
+
+function renderLensBlock(lensState, idx, modeKey) {
+  const def = ANIMALS[lensState.key];
+  if (!def) return "";
+
+  const reflectionId = modeKey + "-lens-reflection-" + idx;
+  const questionsHtml = (lensState.questions || []).map(q => `<li>${esc(q)}</li>`).join("");
+
+  return `
+    <div class="lens-block" style="background: ${def.bg}; border-left-color: ${def.border};">
+      <div class="lens-header">
+        <span class="lens-icon" aria-hidden="true">${def.icon}</span>
+        <h3 class="lens-name">${esc(def.name)}</h3>
+      </div>
+      <p class="lens-theme">${esc(def.theme)}</p>
+      <p class="lens-reason">${esc(lensState.reason || "")}</p>
+      <ol class="lens-questions">${questionsHtml}</ol>
+      <div class="field-group" style="margin-top: 14px; margin-bottom: 0;">
+        <label for="${reflectionId}">${modeKey === "ss" ? "Your reflection" : "My thinking on this"}</label>
+        <textarea id="${reflectionId}" class="short" data-lens-idx="${idx}" data-mode="${modeKey}">${esc(lensState.reflection || "")}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+/* ====================================================================== */
+/* SUPERVISION PREP — FLOW                                                */
+/* ====================================================================== */
+
+document.getElementById("sp-case-continue").addEventListener("click", async () => {
+  const text = document.getElementById("sp-case-input").value.trim();
+  if (!text) {
+    document.getElementById("sp-case-input").focus();
+    return;
+  }
+  sp.caseText = text;
+  goTo("sp-think1");
+
+  try {
+    const result = await callAI(SYSTEM_CALL_1, text);
+    sp.clarifySummary = result.summary || "";
+    sp.clarifyQuestions = Array.isArray(result.questions) ? result.questions : [];
+    sp.domain = result.domain || "";
+
+    document.getElementById("sp-clarify-summary").textContent = sp.clarifySummary;
+    const qList = document.getElementById("sp-clarify-questions");
+    qList.innerHTML = sp.clarifyQuestions.map(q => `<li>${esc(q)}</li>`).join("");
+    document.getElementById("sp-clarify-response").value = "";
+    document.getElementById("sp-outcome").value = "";
+    document.getElementById("sp-advice-notice").classList.add("hidden");
+
+    goTo("sp-clarify");
+  } catch (err) {
+    handleAIError(err, "sp-case");
+  }
+});
+
+document.getElementById("sp-clarify-continue").addEventListener("click", async () => {
+  sp.clarifyResponse = document.getElementById("sp-clarify-response").value.trim();
+  sp.outcome = document.getElementById("sp-outcome").value.trim();
+  goTo("sp-think2");
+
+  const userMessage = `Original case description from supervisee:
+"""
+${sp.caseText}
+"""
+
+My summary back to them:
+"""
+${sp.clarifySummary}
+"""
+
+Their response to my clarifying questions (may be empty):
+"""
+${sp.clarifyResponse || "(left blank)"}
+"""
+
+What a good outcome looks like for them:
+"""
+${sp.outcome || "(not stated)"}
+"""
+
+Supervisory domain signal from the first call: ${sp.domain || "(none)"}`;
+
+  try {
+    const result = await callAI(buildSystemCall2(MODE_CONTEXT_PREP), userMessage);
+    sp.rationale = result.rationale || "";
+    sp.lenses = (result.lenses || [])
+      .filter(l => l && ANIMALS[l.key])
+      .map(l => ({
+        key: l.key,
+        reason: l.reason || "",
+        questions: Array.isArray(l.questions) ? l.questions.slice(0, 3) : [],
+        reflection: ""
+      }))
+      .slice(0, 3);
+
+    document.getElementById("sp-focus-rationale").textContent = sp.rationale;
+    document.getElementById("sp-focus-lenses").innerHTML = sp.lenses.map((l, i) => renderLensBlock(l, i, "sp")).join("");
+    document.getElementById("sp-intention").value = "";
+
+    // Capture reflection edits
+    document.querySelectorAll('#sp-focus-lenses textarea[data-mode="sp"]').forEach(t => {
+      t.addEventListener("input", () => {
+        const i = parseInt(t.getAttribute("data-lens-idx"), 10);
+        if (sp.lenses[i]) sp.lenses[i].reflection = t.value;
+      });
+    });
+
+    goTo("sp-focus");
+  } catch (err) {
+    handleAIError(err, "sp-clarify");
+  }
+});
+
+document.getElementById("sp-focus-continue").addEventListener("click", () => {
+  sp.intention = document.getElementById("sp-intention").value.trim();
+  renderSPSummary();
+  goTo("sp-summary");
+});
+
+function renderSPSummary() {
+  const today = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  document.getElementById("sp-summary-date").textContent = today;
+
+  const lensBlocks = sp.lenses.map(l => {
+    const def = ANIMALS[l.key];
+    const questionsHtml = (l.questions || []).map(q => `<li>${esc(q)}</li>`).join("");
+    return `
+      <div class="lens-block" style="background: ${def.bg}; border-left-color: ${def.border};">
+        <div class="lens-header">
+          <span class="lens-icon" aria-hidden="true">${def.icon}</span>
+          <h3 class="lens-name">${esc(def.name)}</h3>
+        </div>
+        <p class="lens-theme">${esc(def.theme)}</p>
+        <p class="lens-reason">${esc(l.reason)}</p>
+        <ol class="lens-questions">${questionsHtml}</ol>
+        ${l.reflection ? `<div style="margin-top: 12px;"><span class="label">My thinking</span><p style="margin-top: 6px; white-space: pre-wrap;">${esc(l.reflection)}</p></div>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("sp-summary-body").innerHTML = `
+    <div class="summary-section">
+      <span class="label">What I am bringing</span>
+      <p>${esc(sp.caseText)}</p>
+    </div>
+    <div class="summary-section">
+      <span class="label">A good outcome would be</span>
+      <p>${esc(sp.outcome || "(not stated)")}</p>
+    </div>
+    <div class="summary-section">
+      <span class="label">Why these perspectives</span>
+      <p>${esc(sp.rationale)}</p>
+    </div>
+    ${lensBlocks}
+    <div class="summary-section" style="margin-top: 24px;">
+      <span class="label">What I most want my supervisor to know</span>
+      <p>${esc(sp.intention || "(not stated)")}</p>
+    </div>
+  `;
+}
+
+document.getElementById("sp-copy").addEventListener("click", () => {
+  const today = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  let txt = "SUPERVISION PREPARATION NOTE\n";
+  txt += today + "\n";
+  txt += "==============================\n\n";
+  txt += "WHAT I AM BRINGING\n";
+  txt += sp.caseText + "\n\n";
+  txt += "A GOOD OUTCOME WOULD BE\n";
+  txt += (sp.outcome || "(not stated)") + "\n\n";
+  txt += "WHY THESE PERSPECTIVES\n";
+  txt += sp.rationale + "\n\n";
+  sp.lenses.forEach(l => {
+    const def = ANIMALS[l.key];
+    txt += "---\n";
+    txt += def.name.toUpperCase() + " — " + def.theme + "\n";
+    txt += l.reason + "\n\n";
+    (l.questions || []).forEach((q, i) => {
+      txt += (i + 1) + ". " + q + "\n";
+    });
+    if (l.reflection) {
+      txt += "\nMy thinking:\n" + l.reflection + "\n";
+    }
+    txt += "\n";
+  });
+  txt += "---\n\n";
+  txt += "WHAT I MOST WANT MY SUPERVISOR TO KNOW\n";
+  txt += (sp.intention || "(not stated)") + "\n\n";
+  txt += "Prepared using a structured reflective tool. A starting point for supervision, not a replacement for it.\n";
+
+  copyToClipboard(txt, "sp-copy");
+});
+
+/* ====================================================================== */
+/* SELF-SUPERVISION — FLOW                                                */
+/* ====================================================================== */
+
+document.getElementById("ss-case-continue").addEventListener("click", async () => {
+  const text = document.getElementById("ss-case-input").value.trim();
+  if (!text) {
+    document.getElementById("ss-case-input").focus();
+    return;
+  }
+  ss.caseText = text;
+  goTo("ss-think1");
+
+  try {
+    const result = await callAI(SYSTEM_CALL_1, text);
+    ss.clarifySummary = result.summary || "";
+    ss.clarifyQuestions = Array.isArray(result.questions) ? result.questions : [];
+    ss.domain = result.domain || "";
+
+    document.getElementById("ss-clarify-summary").textContent = ss.clarifySummary;
+    const qList = document.getElementById("ss-clarify-questions");
+    qList.innerHTML = ss.clarifyQuestions.map(q => `<li>${esc(q)}</li>`).join("");
+    document.getElementById("ss-clarify-response").value = "";
+    document.getElementById("ss-outcome").value = "";
+    document.getElementById("ss-advice-notice").classList.add("hidden");
+
+    goTo("ss-clarify");
+  } catch (err) {
+    handleAIError(err, "ss-case");
+  }
+});
+
+document.getElementById("ss-clarify-continue").addEventListener("click", async () => {
+  ss.clarifyResponse = document.getElementById("ss-clarify-response").value.trim();
+  ss.outcome = document.getElementById("ss-outcome").value.trim();
+  goTo("ss-think2");
+
+  const userMessage = `Original case description from supervisee:
+"""
+${ss.caseText}
+"""
+
+My summary back to them:
+"""
+${ss.clarifySummary}
+"""
+
+Their response to my clarifying questions (may be empty):
+"""
+${ss.clarifyResponse || "(left blank)"}
+"""
+
+What a good outcome looks like for them:
+"""
+${ss.outcome || "(not stated)"}
+"""
+
+Supervisory domain signal from the first call: ${ss.domain || "(none)"}`;
+
+  try {
+    const result = await callAI(buildSystemCall2(MODE_CONTEXT_SELF), userMessage);
+    ss.rationale = result.rationale || "";
+    ss.lenses = (result.lenses || [])
+      .filter(l => l && ANIMALS[l.key])
+      .map(l => ({
+        key: l.key,
+        reason: l.reason || "",
+        questions: Array.isArray(l.questions) ? l.questions.slice(0, 3) : [],
+        reflection: ""
+      }))
+      .slice(0, 3);
+
+    document.getElementById("ss-reflect-rationale").textContent = ss.rationale;
+    document.getElementById("ss-reflect-lenses").innerHTML = ss.lenses.map((l, i) => renderLensBlock(l, i, "ss")).join("");
+    document.getElementById("ss-somatic").value = "";
+    document.getElementById("ss-unsettling").value = "";
+
+    document.querySelectorAll('#ss-reflect-lenses textarea[data-mode="ss"]').forEach(t => {
+      t.addEventListener("input", () => {
+        const i = parseInt(t.getAttribute("data-lens-idx"), 10);
+        if (ss.lenses[i]) ss.lenses[i].reflection = t.value;
+      });
+    });
+
+    goTo("ss-reflect");
+  } catch (err) {
+    handleAIError(err, "ss-clarify");
+  }
+});
+
+document.getElementById("ss-reflect-continue").addEventListener("click", () => {
+  ss.somatic = document.getElementById("ss-somatic").value.trim();
+  ss.unsettling = document.getElementById("ss-unsettling").value.trim();
+  renderSSSummary();
+  goTo("ss-summary");
+});
+
+function renderSSSummary() {
+  const today = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  document.getElementById("ss-summary-date").textContent = today;
+
+  const lensBlocks = ss.lenses.map(l => {
+    const def = ANIMALS[l.key];
+    const questionsHtml = (l.questions || []).map(q => `<li>${esc(q)}</li>`).join("");
+    return `
+      <div class="lens-block" style="background: ${def.bg}; border-left-color: ${def.border};">
+        <div class="lens-header">
+          <span class="lens-icon" aria-hidden="true">${def.icon}</span>
+          <h3 class="lens-name">${esc(def.name)}</h3>
+        </div>
+        <p class="lens-theme">${esc(def.theme)}</p>
+        <p class="lens-reason">${esc(l.reason)}</p>
+        <ol class="lens-questions">${questionsHtml}</ol>
+        ${l.reflection ? `<div style="margin-top: 12px;"><span class="label">Your reflection</span><p style="margin-top: 6px; white-space: pre-wrap;">${esc(l.reflection)}</p></div>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("ss-summary-body").innerHTML = `
+    <div class="summary-section">
+      <span class="label">What I brought</span>
+      <p>${esc(ss.caseText)}</p>
+    </div>
+    <div class="summary-section">
+      <span class="label">A good outcome would be</span>
+      <p>${esc(ss.outcome || "(not stated)")}</p>
+    </div>
+    ${ss.somatic ? `<div class="summary-section"><span class="label">What my body told me</span><p>${esc(ss.somatic)}</p></div>` : ""}
+    <div class="summary-section">
+      <span class="label">Why these perspectives</span>
+      <p>${esc(ss.rationale)}</p>
+    </div>
+    ${lensBlocks}
+    ${ss.unsettling ? `<div class="summary-section" style="margin-top: 24px;"><span class="label">The question I had been hoping not to be asked</span><p>${esc(ss.unsettling)}</p></div>` : ""}
+  `;
+}
+
+document.getElementById("ss-copy").addEventListener("click", () => {
+  const today = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  let txt = "THE SUPERVISION COUNCIL: SELF-SUPERVISION\n";
+  txt += today + "\n";
+  txt += "==============================\n\n";
+  txt += "WHAT I BROUGHT\n";
+  txt += ss.caseText + "\n\n";
+  txt += "A GOOD OUTCOME WOULD BE\n";
+  txt += (ss.outcome || "(not stated)") + "\n\n";
+  if (ss.somatic) {
+    txt += "WHAT MY BODY TOLD ME\n";
+    txt += ss.somatic + "\n\n";
+  }
+  txt += "WHY THESE PERSPECTIVES\n";
+  txt += ss.rationale + "\n\n";
+  ss.lenses.forEach(l => {
+    const def = ANIMALS[l.key];
+    txt += "---\n";
+    txt += def.name.toUpperCase() + " — " + def.theme + "\n";
+    txt += l.reason + "\n\n";
+    (l.questions || []).forEach((q, i) => {
+      txt += (i + 1) + ". " + q + "\n";
+    });
+    if (l.reflection) {
+      txt += "\nReflection:\n" + l.reflection + "\n";
+    }
+    txt += "\n";
+  });
+  if (ss.unsettling) {
+    txt += "---\n\n";
+    txt += "THE QUESTION I HAD BEEN HOPING NOT TO BE ASKED\n";
+    txt += ss.unsettling + "\n\n";
+  }
+  txt += "A reflective record. Not a substitute for human supervision.\n";
+
+  copyToClipboard(txt, "ss-copy");
+});
+
+/* ====================================================================== */
+/* CLIPBOARD                                                              */
+/* ====================================================================== */
+
+function copyToClipboard(text, btnId) {
+  const btn = document.getElementById(btnId);
+  const original = btn ? btn.textContent : "";
+
+  const fallback = () => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) { /* ignore */ }
+    document.body.removeChild(ta);
+  };
+
+  const finish = (ok) => {
+    if (!btn) return;
+    btn.textContent = ok ? "Copied" : "Copy failed";
+    setTimeout(() => { btn.textContent = original; }, 1800);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => finish(true)).catch(() => { fallback(); finish(true); });
+  } else {
+    fallback();
+    finish(true);
+  }
+}
+
+/* ====================================================================== */
+/* ERROR HANDLING                                                         */
+/* ====================================================================== */
+
+function handleAIError(err, fallbackScreen) {
+  console.error(err);
+  alert("Something went wrong while contacting the AI service.\n\n" + (err && err.message ? err.message : String(err)) + "\n\nPlease try again. If this keeps happening, check that the ANTHROPIC_API_KEY environment variable is set in Cloudflare Pages.");
+  goTo(fallbackScreen);
+}
+
+/* ====================================================================== */
+/* GROUP SUPERVISION                                                      */
+/* ====================================================================== */
+
+document.getElementById("gs-begin").addEventListener("click", () => {
+  renderGroupLensList();
+  renderGroupPhase2Lenses();
+  renderGroupPhase3List();
+  goTo("gs-phase1");
+});
+
+function renderGroupLensList() {
+  const container = document.getElementById("gs-lens-list");
+  container.innerHTML = DOMAIN_ORDER.map(d => {
+    const dom = DOMAINS[d];
+    const pills = dom.lenses.map(k => {
+      const a = ANIMALS[k];
+      return `<span class="animal-pill"><span aria-hidden="true">${a.icon}</span> ${esc(a.name)}</span>`;
+    }).join("");
+    return `
+      <div class="domain-cluster">
+        <p class="domain-cluster-name">${esc(dom.name)}</p>
+        <div class="animal-row">${pills}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderGroupPhase2Lenses() {
+  const container = document.getElementById("gs-phase2-lenses");
+  container.innerHTML = Object.keys(ANIMALS).map(k => {
+    const a = ANIMALS[k];
+    const qs = a.questions.map(q => `<li>${esc(q)}</li>`).join("");
+    return `
+      <details style="margin-bottom: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; background: var(--field);">
+        <summary style="cursor: pointer; font-family: var(--serif-display); font-size: 0.95rem;">${a.icon} ${esc(a.name)} — <span style="font-style: italic; color: var(--muted); font-weight: normal;">${esc(a.theme)}</span></summary>
+        <ol class="lens-questions" style="margin-top: 12px;">${qs}</ol>
+        <p class="lens-blindspot"><strong>Blind spot.</strong> ${esc(a.blindspot)}</p>
+      </details>
+    `;
+  }).join("");
+}
+
+function renderGroupPhase3List() {
+  const container = document.getElementById("gs-phase3-list");
+  container.innerHTML = DOMAIN_ORDER.map(d => {
+    const dom = DOMAINS[d];
+    const items = dom.lenses.map(k => {
+      const a = ANIMALS[k];
+      return `<li><strong>${a.icon} ${esc(a.name)}</strong> — ${esc(a.theme)}</li>`;
+    }).join("");
+    return `
+      <div class="domain-cluster">
+        <p class="domain-cluster-name">${esc(dom.name)}</p>
+        <ul class="checklist" style="margin: 0;">${items}</ul>
+      </div>
+    `;
+  }).join("");
+}
+
+/* ---- Group timers ---- */
+
+const GS_TIMERS = {
+  "gs-timer-1": { seconds: 180, interval: null, running: false },
+  "gs-timer-2": { seconds: 600, interval: null, running: false },
+  "gs-timer-3": { seconds: 600, interval: null, running: false },
+  "gs-timer-4": { seconds: 300, interval: null, running: false },
+  "gs-timer-5": { seconds: 120, interval: null, running: false }
+};
+
+function fmt(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function updateTimerDisplay(id) {
+  const t = GS_TIMERS[id];
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = fmt(t.seconds);
+  if (t.seconds <= 30) el.classList.add("warn"); else el.classList.remove("warn");
+}
+
+function wireTimer(id, btnId) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  updateTimerDisplay(id);
+  btn.addEventListener("click", () => {
+    const t = GS_TIMERS[id];
+    if (t.running) {
+      clearInterval(t.interval);
+      t.running = false;
+      btn.textContent = "Resume timer";
+    } else {
+      t.running = true;
+      btn.textContent = "Pause timer";
+      t.interval = setInterval(() => {
+        if (t.seconds > 0) {
+          t.seconds--;
+          updateTimerDisplay(id);
+        } else {
+          clearInterval(t.interval);
+          t.running = false;
+          btn.textContent = "Time up";
+          btn.disabled = true;
+        }
+      }, 1000);
+    }
+  });
+}
+
+wireTimer("gs-timer-1", "gs-timer-1-toggle");
+wireTimer("gs-timer-2", "gs-timer-2-toggle");
+wireTimer("gs-timer-3", "gs-timer-3-toggle");
+wireTimer("gs-timer-4", "gs-timer-4-toggle");
+wireTimer("gs-timer-5", "gs-timer-5-toggle");
+
+/* ====================================================================== */
+/* EXPLORE                                                                */
+/* ====================================================================== */
+
+function renderExplore() {
+  const container = document.getElementById("explore-list");
+  container.innerHTML = DOMAIN_ORDER.map(d => {
+    const dom = DOMAINS[d];
+    const lenses = dom.lenses.map(k => {
+      const a = ANIMALS[k];
+      const qs = a.questions.map(q => `<li>${esc(q)}</li>`).join("");
+      return `
+        <div class="lens-block" style="background: ${a.bg}; border-left-color: ${a.border};">
+          <div class="lens-header">
+            <span class="lens-icon" aria-hidden="true">${a.icon}</span>
+            <h3 class="lens-name">${esc(a.name)}</h3>
+          </div>
+          <p class="lens-theme">${esc(a.theme)}</p>
+          <p class="lens-reason"><strong>Notices:</strong> ${esc(a.notices)}</p>
+          <p class="label" style="margin-top: 14px;">Default questions</p>
+          <ol class="lens-questions" style="margin-top: 8px;">${qs}</ol>
+          <p class="lens-blindspot"><strong>Blind spot.</strong> ${esc(a.blindspot)}</p>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="domain-header">
+        <p class="domain-name">${esc(dom.name)}</p>
+        <p class="domain-desc">${esc(dom.description)}</p>
+      </div>
+      ${lenses}
+    `;
+  }).join("");
+}
+renderExplore();
+
+</script>
+</body>
+</html>
