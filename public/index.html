@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Supervision Council</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f4f1ec;
+    --bg-card:   #ffffff;
+    --accent:    #3d8aa8;
+    --accent-lt: #5b9db5;
+    --text:      #1e2d45;
+    --text-dim:  #5a6a80;
+    --border:    #dde3ec;
+    --red:       #8b2030;
+    --red-lt:    #7a1828;
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body { font-family:'Crimson Pro',serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(61,138,168,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(91,157,181,0.04) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%, var(--bg) 0%, #ece8e0 100%);
+    z-index:-1;
+  }
+
+  .screen { display:none; min-height:100vh; padding:2rem 1.5rem; }
+  .screen.active { display:flex; flex-direction:column; align-items:center; }
+
+  /* SHARED */
+  .screen-label { font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.5rem; }
+  .screen-title { font-family:'Cinzel',serif; font-size:clamp(1.1rem,4vw,1.5rem); color:var(--text); font-weight:400; }
+  .screen-body  { font-size:1rem; font-style:italic; color:var(--text-dim); text-align:center; line-height:1.6; }
+  .screen-header { text-align:center; padding:1rem 0; }
+  .divider { width:120px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin:0 auto; }
+  .ornament { text-align:center; color:var(--accent); opacity:.35; font-size:.9rem; letter-spacing:.3em; }
+
+  /* LANDING */
+  #screen-landing { justify-content:center; text-align:center; gap:1.5rem; }
+  .landing-symbol { font-size:4.5rem; line-height:1; text-align:center; animation:breathe 4s ease-in-out infinite; filter:drop-shadow(0 0 16px rgba(61,138,168,0.2)); }
+  @keyframes breathe { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.05);opacity:1} }
+  .landing-title    { font-family:'Cinzel',serif; font-size:clamp(1.4rem,5vw,2.1rem); font-weight:600; color:var(--accent-lt); letter-spacing:.07em; line-height:1.3; }
+  .landing-subtitle { font-size:1.05rem; font-style:italic; color:var(--text-dim); max-width:360px; line-height:1.6; }
+
+  .mode-grid { display:flex; flex-direction:column; gap:.85rem; width:100%; max-width:420px; }
+  .mode-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.4rem; cursor:pointer; transition:all .25s ease; text-align:left; display:flex; align-items:flex-start; gap:1.1rem; box-shadow:0 1px 4px rgba(30,45,69,0.07); }
+  .mode-card:hover { background:rgba(61,138,168,0.06); border-color:var(--accent); transform:translateY(-2px); box-shadow:0 6px 24px rgba(61,138,168,0.12); }
+  .mode-card-icon { font-size:2rem; flex-shrink:0; line-height:1; margin-top:.1rem; }
+  .mode-card-title { font-family:'Cinzel',serif; font-size:1rem; color:var(--accent-lt); margin-bottom:.3rem; }
+  .mode-card-desc  { font-size:.9rem; font-style:italic; color:var(--text-dim); line-height:1.5; }
+
+  /* BUTTONS */
+  .btn { font-family:'Cinzel',serif; font-size:.85rem; letter-spacing:.15em; padding:.9rem 2rem; border:none; border-radius:6px; cursor:pointer; transition:all .2s ease; text-transform:uppercase; width:100%; }
+  .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent-lt)); color:var(--bg); font-weight:600; }
+  .btn-primary:hover { filter:brightness(1.1); transform:translateY(-1px); box-shadow:0 4px 20px rgba(91,157,181,0.3); }
+  .btn-ghost { background:transparent; color:var(--text-dim); border:1px solid var(--border); }
+  .btn-ghost:hover { border-color:var(--accent); color:var(--accent-lt); }
+  .btn-sm { padding:.6rem 1rem; font-size:.78rem; }
+  .btn:disabled { opacity:.35; cursor:not-allowed; transform:none!important; filter:none!important; }
+
+  /* ABOUT SCREEN */
+  #screen-about { gap:1.5rem; max-width:580px; margin:0 auto; width:100%; }
+  .about-section { width:100%; }
+  .about-section-title { font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.9rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
+  .about-body { font-size:1rem; line-height:1.8; color:var(--text-dim); }
+  .about-body p { margin-bottom:1rem; }
+  .about-body p:last-child { margin-bottom:0; }
+  .about-caveat { background:rgba(139,32,48,0.05); border:1px solid rgba(139,32,48,0.2); border-radius:10px; padding:1.25rem 1.4rem; width:100%; }
+  .about-caveat-title { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.18em; color:var(--red-lt); text-transform:uppercase; margin-bottom:.6rem; }
+  .about-caveat-body { font-size:.95rem; line-height:1.75; color:var(--text-dim); }
+  .about-caveat-body p { margin-bottom:.75rem; }
+  .about-caveat-body p:last-child { margin-bottom:0; }
+  .about-positive { background:rgba(35,100,80,0.06); border:1px solid rgba(35,100,80,0.2); border-radius:10px; padding:1.25rem 1.4rem; width:100%; }
+  .about-positive-title { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.18em; color:#88c4b8; text-transform:uppercase; margin-bottom:.6rem; }
+  .about-positive-body { font-size:.95rem; line-height:1.75; color:var(--text-dim); }
+  .about-positive-body p { margin-bottom:.75rem; }
+  .about-positive-body p:last-child { margin-bottom:0; }
+  .about-statement { background:rgba(61,138,168,0.06); border:1px solid rgba(61,138,168,0.22); border-radius:10px; padding:1.25rem 1.4rem; width:100%; font-size:1rem; font-style:italic; line-height:1.75; color:var(--text); text-align:center; }
+
+  /* EXPLORE SCREEN */
+  #screen-explore { gap:1.75rem; max-width:600px; margin:0 auto; width:100%; }
+  .explore-focus-group { width:100%; }
+  .explore-focus-label { font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.4rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
+  .explore-focus-desc { font-size:.92rem; font-style:italic; color:var(--text-dim); line-height:1.65; margin-bottom:1rem; }
+  .explore-animal { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.2rem 1.4rem; margin-bottom:.75rem; box-shadow:0 1px 3px rgba(30,45,69,0.06); }
+  .explore-animal-head { display:flex; align-items:center; gap:.8rem; margin-bottom:.6rem; }
+  .explore-animal-icon { font-size:1.6rem; flex-shrink:0; }
+  .explore-animal-name { font-family:'Cinzel',serif; font-size:.95rem; color:var(--accent-lt); }
+  .explore-animal-theme { font-size:.82rem; font-style:italic; color:var(--text-dim); }
+  .explore-animal-body { font-size:.95rem; line-height:1.7; color:var(--text-dim); }
+
+  /* GROUP MODE */
+  #screen-role, #screen-animal { gap:1.5rem; max-width:500px; margin:0 auto; width:100%; }
+  .role-grid { display:flex; flex-direction:column; gap:.75rem; width:100%; }
+  .role-card { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; cursor:pointer; transition:all .25s ease; text-align:left; display:flex; align-items:center; gap:1rem; box-shadow:0 1px 3px rgba(30,45,69,0.07); }
+  .role-card:hover { background:rgba(61,138,168,0.06); border-color:var(--accent); transform:translateX(4px); }
+  .role-icon { font-size:1.8rem; flex-shrink:0; }
+  .role-name { font-family:'Cinzel',serif; font-size:1rem; color:var(--accent-lt); margin-bottom:.2rem; }
+  .role-desc { font-size:.92rem; color:var(--text-dim); font-style:italic; }
+
+  .animal-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.75rem; width:100%; }
+  .animal-card { border-radius:8px; padding:1rem; cursor:pointer; transition:all .25s ease; text-align:center; border:1px solid rgba(255,255,255,0.08); }
+  .animal-card:hover { transform:translateY(-2px); filter:brightness(1.15); }
+  .animal-card .animal-icon  { font-size:2rem; margin-bottom:.4rem; }
+  .animal-card .animal-name  { font-family:'Cinzel',serif; font-size:.8rem; letter-spacing:.1em; margin-bottom:.2rem; color:var(--text); }
+  .animal-card .animal-theme { font-size:.75rem; font-style:italic; color:var(--text-dim); }
+
+  /* Animal card colours: light tints for pale palette */
+  .animal-swan   { background:rgba(60,80,140,0.08);  border-color:rgba(60,80,140,0.28); }
+  .animal-eagle  { background:rgba(35,110,80,0.08);  border-color:rgba(35,110,80,0.28); }
+  .animal-tiger  { background:rgba(160,75,30,0.08);  border-color:rgba(160,75,30,0.28); }
+  .animal-rabbit { background:rgba(120,60,140,0.08); border-color:rgba(120,60,140,0.28); }
+  .animal-horse  { background:rgba(150,40,55,0.08);  border-color:rgba(150,40,55,0.28); }
+  .animal-deer   { background:rgba(60,120,70,0.08);  border-color:rgba(60,120,70,0.28); }
+  .animal-monkey { background:rgba(35,80,150,0.08);  border-color:rgba(35,80,150,0.28); }
+  .animal-owl    { background:rgba(120,90,25,0.08);  border-color:rgba(120,90,25,0.28); }
+  .animal-dog    { background:rgba(110,70,30,0.08);  border-color:rgba(110,70,30,0.28); }
+  .animal-bear   { background:rgba(110,40,80,0.08);  border-color:rgba(110,40,80,0.28); }
+  .animal-beaver { background:rgba(40,80,120,0.08);  border-color:rgba(40,80,120,0.28); }
+  .animal-wolf   { background:rgba(35,100,80,0.08);  border-color:rgba(35,100,80,0.28); }
+
+  /* GROUP PHASE */
+  #screen-phase { gap:1.25rem; max-width:520px; margin:0 auto; width:100%; }
+  .timer-ring-wrap { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+  .timer-ring { position:relative; width:140px; height:140px; }
+  .timer-ring svg { transform:rotate(-90deg); width:140px; height:140px; }
+  .timer-track { fill:none; stroke:rgba(30,45,69,0.1); stroke-width:6; }
+  .timer-arc   { fill:none; stroke:var(--accent); stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset 1s linear,stroke .5s ease; }
+  .timer-display { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .timer-time  { font-family:'Cinzel',serif; font-size:2rem; font-weight:600; color:var(--accent-lt); line-height:1; }
+  .timer-label { font-size:.72rem; letter-spacing:.1em; color:var(--text-dim); margin-top:.2rem; }
+  .timer-controls { display:flex; gap:.75rem; width:100%; }
+  .phase-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.5rem; width:100%; box-shadow:0 1px 3px rgba(30,45,69,0.07); }
+  .phase-number { font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; margin-bottom:.4rem; }
+  .phase-name   { font-family:'Cinzel',serif; font-size:1.15rem; color:var(--text); margin-bottom:.75rem; }
+  .phase-instruction { font-size:1rem; line-height:1.7; color:var(--text-dim); }
+  .checklist-panel { background:rgba(61,138,168,0.04); border:1px solid rgba(61,138,168,0.15); border-radius:10px; padding:1.25rem; width:100%; }
+  .checklist-title { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.75rem; }
+  .checklist-item { display:flex; align-items:flex-start; gap:.75rem; padding:.4rem .25rem; cursor:pointer; border-radius:4px; transition:background .15s; }
+  .checklist-item:hover { background:rgba(91,157,181,0.05); }
+  .checklist-item input[type="checkbox"] { margin-top:.25rem; accent-color:var(--accent); width:14px; height:14px; flex-shrink:0; cursor:pointer; }
+  .checklist-item label { font-size:.92rem; color:var(--text-dim); line-height:1.5; cursor:pointer; }
+  .checklist-item.checked label { opacity:.4; text-decoration:line-through; }
+  .role-badge { display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1rem; border-radius:20px; font-size:.87rem; font-style:italic; border:1px solid var(--border); background:rgba(91,157,181,0.07); color:var(--accent-lt); }
+  .lens-panel { background:var(--bg-card); border-radius:10px; padding:1.25rem; width:100%; border-left:3px solid var(--accent); box-shadow:0 1px 3px rgba(30,45,69,0.07); }
+  .lens-header { display:flex; align-items:center; gap:.75rem; margin-bottom:.75rem; }
+  .lens-icon { font-size:1.5rem; }
+  .lens-name  { font-family:'Cinzel',serif; font-size:.92rem; color:var(--accent-lt); }
+  .lens-focus { font-size:.82rem; font-style:italic; color:var(--text-dim); }
+  .lens-questions { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+  .lens-questions li { font-size:.97rem; line-height:1.5; color:var(--text-dim); padding-left:1rem; position:relative; font-style:italic; }
+  .lens-questions li::before { content:'&#8212;'; position:absolute; left:0; color:var(--accent); opacity:.5; }
+  .lens-notice { margin-top:.75rem; padding:.75rem; background:rgba(232,237,245,0.03); border-radius:6px; font-size:.87rem; color:var(--text-dim); font-style:italic; line-height:1.5; }
+  .notes-label { font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.4rem; }
+  .notes-area  { width:100%; background:#fdfcfa; border:1px solid var(--border); border-radius:8px; padding:1rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1rem; resize:vertical; min-height:100px; outline:none; transition:border-color .2s; }
+  .notes-area::placeholder { color:rgba(232,237,245,0.25); font-style:italic; }
+  .notes-area:focus { border-color:rgba(91,157,181,0.5); }
+  .phase-alert { background:rgba(139,32,48,0.08); border:1px solid rgba(139,32,48,0.25); border-radius:8px; padding:.75rem 1rem; font-size:.92rem; color:var(--red); text-align:center; font-style:italic; display:none; }
+  .phase-alert.visible { display:block; }
+  .progress-dots { display:flex; gap:.5rem; justify-content:center; }
+  .dot { width:6px; height:6px; border-radius:50%; background:rgba(232,237,245,0.15); transition:all .3s ease; }
+  .dot.done    { background:var(--accent); }
+  .dot.current { background:var(--accent-lt); transform:scale(1.4); }
+
+  /* GROUP CLOSE */
+  #screen-close { gap:1.5rem; max-width:500px; margin:0 auto; width:100%; justify-content:center; text-align:center; }
+  .reflection-prompt { background:rgba(61,138,168,0.05); border:1px solid rgba(61,138,168,0.2); border-radius:10px; padding:1.5rem; font-size:1.05rem; font-style:italic; line-height:1.7; color:var(--text); text-align:left; }
+
+  /* SHARED AI / CASE INPUT STYLES */
+  #ss-case, #ss-thinking, #ss-clarify, #ss-thinking2, #ss-reflect, #ss-summary,
+  #sp-case, #sp-thinking, #sp-clarify, #sp-thinking2, #sp-focus,  #sp-summary
+  { gap:1.5rem; max-width:540px; margin:0 auto; width:100%; }
+
+  .privacy-notice { background:rgba(61,138,168,0.04); border:1px solid rgba(61,138,168,0.15); border-radius:8px; padding:.9rem 1.1rem; width:100%; font-size:.88rem; color:var(--text-dim); line-height:1.65; }
+  .privacy-notice strong { font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.15em; color:var(--accent); text-transform:uppercase; display:block; margin-bottom:.35rem; }
+
+  .ethics-alert { background:rgba(139,32,48,0.07); border:1px solid rgba(139,32,48,0.25); border-radius:10px; padding:1.1rem 1.25rem; width:100%; display:none; }
+  .ethics-alert.visible { display:block; }
+  .ethics-alert-title { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; color:var(--red-lt); text-transform:uppercase; margin-bottom:.5rem; }
+  .ethics-alert-body  { font-size:.95rem; color:var(--text-dim); line-height:1.7; }
+
+  .advice-alert { background:rgba(61,138,168,0.06); border:1px solid rgba(61,138,168,0.22); border-radius:10px; padding:1rem 1.2rem; width:100%; display:none; }
+  .advice-alert.visible { display:block; }
+  .advice-alert-title { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; color:var(--accent-lt); text-transform:uppercase; margin-bottom:.4rem; }
+  .advice-alert-body  { font-size:.92rem; color:var(--text-dim); line-height:1.7; font-style:italic; }
+
+  .case-area { width:100%; background:#fdfcfa; border:1px solid var(--border); border-radius:10px; padding:1.1rem 1.25rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1.05rem; line-height:1.7; resize:vertical; min-height:150px; outline:none; transition:border-color .2s; }
+  .case-area::placeholder { color:rgba(232,237,245,0.25); font-style:italic; }
+  .case-area:focus { border-color:rgba(91,157,181,0.45); }
+
+  /* THINKING SCREENS */
+  #ss-thinking, #ss-thinking2, #sp-thinking, #sp-thinking2 { justify-content:center; text-align:center; min-height:100vh; }
+  .thinking-orb { width:100px; height:100px; border-radius:50%; background:radial-gradient(circle at 35% 35%,rgba(91,157,181,0.25),rgba(14,20,32,0.1)); border:1px solid rgba(91,157,181,0.3); display:flex; align-items:center; justify-content:center; font-size:2.8rem; animation:pulse-orb 2s ease-in-out infinite; box-shadow:0 0 40px rgba(91,157,181,0.12),inset 0 0 20px rgba(91,157,181,0.05); }
+  @keyframes pulse-orb { 0%,100%{transform:scale(1);box-shadow:0 0 40px rgba(91,157,181,0.12),inset 0 0 20px rgba(91,157,181,0.05)} 50%{transform:scale(1.06);box-shadow:0 0 60px rgba(91,157,181,0.22),inset 0 0 30px rgba(91,157,181,0.08)} }
+  .thinking-title { font-family:'Cinzel',serif; font-size:1.1rem; color:var(--accent-lt); letter-spacing:.05em; }
+  .thinking-sub   { font-size:.97rem; font-style:italic; color:var(--text-dim); max-width:300px; line-height:1.6; }
+  .thinking-dots  { display:flex; gap:.5rem; justify-content:center; }
+  .thinking-dot   { width:7px; height:7px; border-radius:50%; background:var(--accent); opacity:.3; animation:dotbounce 1.4s ease-in-out infinite; }
+  .thinking-dot:nth-child(2){animation-delay:.2s} .thinking-dot:nth-child(3){animation-delay:.4s}
+  @keyframes dotbounce { 0%,80%,100%{opacity:.3;transform:scale(1)} 40%{opacity:1;transform:scale(1.3)} }
+  .thinking-error { background:rgba(139,32,48,0.06); border:1px solid rgba(139,32,48,0.22); border-radius:10px; padding:1.25rem; font-size:.97rem; color:var(--red); line-height:1.6; text-align:left; max-width:420px; white-space:pre-wrap; }
+
+  /* CLARIFICATION SCREEN */
+  .clarify-summary { background:rgba(61,138,168,0.05); border:1px solid rgba(61,138,168,0.18); border-radius:10px; padding:1.2rem 1.4rem; width:100%; }
+  .clarify-summary-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:.6rem; }
+  .clarify-summary-body  { font-size:1rem; line-height:1.75; color:var(--text-dim); }
+  .clarify-questions { width:100%; }
+  .clarify-q-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:.75rem; }
+  .clarify-q-item  { font-size:1rem; font-style:italic; color:var(--text); line-height:1.65; padding-left:1rem; position:relative; margin-bottom:.6rem; }
+  .clarify-q-item::before { content:'&#8212;'; position:absolute; left:0; color:var(--accent); opacity:.5; }
+  .clarify-outcome-block { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.2rem 1.4rem; width:100%; box-shadow:0 1px 3px rgba(30,45,69,0.06); }
+  .clarify-outcome-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:.5rem; }
+  .clarify-outcome-q { font-size:1rem; font-style:italic; color:var(--text); line-height:1.6; margin-bottom:.75rem; }
+  .clarify-area { width:100%; background:#fdfcfa; border:1px solid var(--border); border-radius:8px; padding:.9rem 1rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1.05rem; resize:vertical; min-height:100px; outline:none; transition:border-color .2s; line-height:1.6; }
+  .clarify-area::placeholder { color:rgba(232,237,245,0.25); font-style:italic; }
+  .clarify-area:focus { border-color:rgba(91,157,181,0.45); }
+  .clarify-nudge { font-size:.87rem; font-style:italic; color:var(--text-dim); opacity:.65; text-align:center; }
+
+  /* REFLECT SCREEN */
+  .ai-choice-banner { background:rgba(61,138,168,0.05); border:1px solid rgba(61,138,168,0.18); border-radius:10px; padding:1rem 1.25rem; width:100%; font-size:.92rem; color:var(--text-dim); line-height:1.65; font-style:italic; }
+  .ai-choice-banner strong { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.15em; color:var(--accent); font-style:normal; display:block; margin-bottom:.4rem; text-transform:uppercase; }
+
+  .somatic-prompt { background:rgba(120,60,140,0.05); border:1px solid rgba(120,60,140,0.2); border-radius:10px; padding:1.1rem 1.25rem; width:100%; }
+  .somatic-title { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.18em; color:#c4a0c8; text-transform:uppercase; margin-bottom:.5rem; }
+  .somatic-body  { font-size:.97rem; font-style:italic; color:var(--text-dim); line-height:1.7; }
+  .somatic-area  { width:100%; background:#fdfcfa; border:1px solid rgba(120,60,140,0.2); border-radius:8px; padding:.85rem 1rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1.02rem; resize:vertical; min-height:75px; outline:none; transition:border-color .2s; line-height:1.6; margin-top:.6rem; }
+  .somatic-area::placeholder { color:rgba(232,237,245,0.22); font-style:italic; }
+  .somatic-area:focus { border-color:rgba(90,55,100,0.45); }
+
+  .ss-lens-block { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; border-left:3px solid var(--accent); padding:1.4rem; width:100%; box-shadow:0 1px 3px rgba(30,45,69,0.06); }
+  .ss-lens-block-header { display:flex; align-items:flex-start; gap:.85rem; margin-bottom:1rem; }
+  .ss-lens-block-icon   { font-size:1.6rem; flex-shrink:0; line-height:1; }
+  .ss-lens-block-name   { font-family:'Cinzel',serif; font-size:.94rem; color:var(--accent-lt); margin-bottom:.2rem; }
+  .ss-lens-block-theme  { font-size:.82rem; font-style:italic; color:var(--text-dim); line-height:1.4; }
+  .ss-lens-block-reason { font-size:.87rem; color:var(--text-dim); line-height:1.55; margin-bottom:1rem; padding:.75rem 1rem; background:rgba(61,138,168,0.05); border-radius:6px; font-style:italic; }
+  .ss-q-list    { list-style:none; display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.1rem; }
+  .ss-q-list li { font-size:.99rem; font-style:italic; color:var(--text-dim); padding-left:1.1rem; position:relative; line-height:1.6; }
+  .ss-q-list li::before { content:'&#8212;'; position:absolute; left:0; color:var(--accent); opacity:.5; font-style:normal; }
+  .ss-reflect-label { font-family:'Cinzel',serif; font-size:.65rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.4rem; }
+  .ss-reflect-area  { width:100%; background:#fdfcfa; border:1px solid var(--border); border-radius:8px; padding:.9rem 1rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1.02rem; resize:vertical; min-height:90px; outline:none; transition:border-color .2s; line-height:1.6; }
+  .ss-reflect-area::placeholder { color:rgba(232,237,245,0.22); font-style:italic; }
+  .ss-reflect-area:focus { border-color:rgba(91,157,181,0.45); }
+
+  .unsettle-block { background:rgba(160,75,30,0.05); border:1px solid rgba(160,75,30,0.2); border-radius:10px; padding:1.1rem 1.25rem; width:100%; }
+  .unsettle-title { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.18em; color:#d4a888; text-transform:uppercase; margin-bottom:.5rem; }
+  .unsettle-body  { font-size:.97rem; font-style:italic; color:var(--text-dim); line-height:1.7; }
+  .unsettle-area  { width:100%; background:#fdfcfa; border:1px solid rgba(160,75,30,0.2); border-radius:8px; padding:.85rem 1rem; color:var(--text); font-family:'Crimson Pro',serif; font-size:1.02rem; resize:vertical; min-height:75px; outline:none; transition:border-color .2s; line-height:1.6; margin-top:.6rem; }
+  .unsettle-area::placeholder { color:rgba(232,237,245,0.22); font-style:italic; }
+  .unsettle-area:focus { border-color:rgba(110,55,30,0.45); }
+
+  /* SUMMARY SCREENS */
+  #ss-summary, #sp-summary { max-width:540px; }
+  .summary-block { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1.4rem; width:100%; box-shadow:0 1px 3px rgba(30,45,69,0.06); }
+  .summary-section-label { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.2em; color:var(--accent); text-transform:uppercase; margin-bottom:.3rem; }
+  .summary-case  { font-size:.97rem; font-style:italic; color:var(--text-dim); line-height:1.7; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+  .summary-outcome { font-size:.92rem; color:var(--text-dim); line-height:1.65; padding:.75rem 1rem; background:rgba(35,70,60,0.1); border-radius:6px; margin-bottom:1.2rem; }
+  .summary-outcome-label { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.15em; color:#88c4b8; text-transform:uppercase; margin-bottom:.3rem; }
+  .summary-somatic { font-size:.92rem; color:var(--text-dim); line-height:1.65; padding:.75rem 1rem; background:rgba(90,55,100,0.08); border-radius:6px; margin-bottom:1.2rem; }
+  .summary-somatic-label { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.15em; color:#c4a0c8; text-transform:uppercase; margin-bottom:.3rem; }
+  .summary-lens { margin-bottom:1.4rem; }
+  .summary-lens:last-child { margin-bottom:0; }
+  .summary-lens-head { display:flex; align-items:center; gap:.6rem; margin-bottom:.5rem; }
+  .summary-lens-icon { font-size:1.2rem; }
+  .summary-lens-name { font-family:'Cinzel',serif; font-size:.84rem; color:var(--accent-lt); }
+  .summary-q { font-size:.87rem; font-style:italic; color:var(--text-dim); line-height:1.5; padding-left:.9rem; position:relative; margin-bottom:.2rem; }
+  .summary-q::before { content:'&#8212;'; position:absolute; left:0; color:var(--accent); opacity:.4; font-style:normal; }
+  .summary-reflection { font-size:.97rem; color:var(--text); line-height:1.65; background:rgba(61,138,168,0.05); border-radius:6px; padding:.75rem 1rem; margin-top:.5rem; }
+  .summary-reflection-empty { font-size:.87rem; font-style:italic; color:var(--text-dim); opacity:.4; margin-top:.4rem; }
+  .summary-unsettle { font-size:.92rem; color:var(--text-dim); line-height:1.65; padding:.75rem 1rem; background:rgba(110,55,30,0.08); border-radius:6px; margin-top:1rem; }
+  .summary-unsettle-label { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.15em; color:#d4a888; text-transform:uppercase; margin-bottom:.3rem; }
+  .summary-intention { font-size:.92rem; color:var(--text-dim); line-height:1.65; padding:.75rem 1rem; background:rgba(35,60,100,0.1); border-radius:6px; margin-top:1rem; }
+  .summary-intention-label { font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.15em; color:#88a8c4; text-transform:uppercase; margin-bottom:.3rem; }
+  .share-note { font-size:.82rem; font-style:italic; color:var(--text-dim); opacity:.5; text-align:center; line-height:1.6; }
+
+  .copy-btn { font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em; padding:.6rem 1.2rem; border:1px solid rgba(91,157,181,0.3); border-radius:6px; background:transparent; color:var(--accent-lt); cursor:pointer; transition:all .2s; text-transform:uppercase; }
+  .copy-btn:hover { background:rgba(91,157,181,0.08); border-color:var(--accent); }
+  .copy-confirm { font-size:.82rem; font-style:italic; color:var(--accent); opacity:0; transition:opacity .3s; }
+  .copy-confirm.show { opacity:1; }
+
+  .hidden { display:none!important; }
+  .w-full { width:100%; }
+  .fade-in { animation:fadeIn .4s ease forwards; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(61,138,168,0.25); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     LANDING
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-symbol">&#127752;</div>
+  <div>
+    <div class="landing-title">The Supervision Council</div>
+    <div style="font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;color:var(--text-dim);text-align:center;margin-top:.4rem;text-transform:uppercase">Collective wisdom for reflexive practice</div>
+  <div id="landing-copyright" style="font-size:.72rem;color:var(--text-dim);opacity:.45;margin-top:.5rem;font-family:'Crimson Pro',serif;font-style:italic;text-align:center;"></div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="mode-grid fade-in">
+
+    <div class="mode-card" onclick="goTo('sp-case')">
+      <div class="mode-card-icon">&#127793;</div>
+      <div>
+        <div class="mode-card-title">Supervision Prep</div>
+        <div class="mode-card-desc">Preparing for a human supervision session? Articulate what you're bringing, surface what matters most, and arrive ready.</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="goTo('ss-case')">
+      <div class="mode-card-icon">&#127807;</div>
+      <div>
+        <div class="mode-card-title">Self-Supervision</div>
+        <div class="mode-card-desc">Describe what you're bringing. The app reads it, selects the most relevant perspectives, and surfaces questions tailored to your situation.</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="goTo('screen-role')">
+      <div class="mode-card-icon">&#127795;</div>
+      <div>
+        <div class="mode-card-title">Group Supervision</div>
+        <div class="mode-card-desc">A coached case explored by a group, each person holding one animal perspective. Roles: Client, Supervisor, Observers.</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="goTo('screen-explore')">
+      <div class="mode-card-icon">&#127811;</div>
+      <div>
+        <div class="mode-card-title">Explore the Animals</div>
+        <div class="mode-card-desc">Meet all twelve animal perspectives, understand what each notices, and see how they work together across the four supervisory domains.</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="goTo('screen-about')">
+      <div class="mode-card-icon">&#127806;</div>
+      <div>
+        <div class="mode-card-title">About this App</div>
+        <div class="mode-card-desc">What this app is, what it can honestly offer, and what it cannot replace.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+</div>
+
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     ABOUT SCREEN
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="screen-about" class="screen">
+  <div class="screen-header fade-in" style="width:100%;max-width:580px">
+    <div class="screen-label">About This App</div>
+    <div class="screen-title">What This Is, and What It Isn't</div>
+  </div>
+
+  <div class="about-statement fade-in" style="max-width:580px">
+    This is a structured reflective thinking aid for practising coaches who already have human supervision. It extends the supervisory space between sessions. It is not supervision.
+  </div>
+
+  <div class="about-section fade-in" style="max-width:580px">
+    <div class="about-section-title">What it does</div>
+    <div class="about-body">
+      <p>The Supervision Council uses twelve animal perspectives, each representing a distinct supervisory viewpoint, to help coaches think more broadly about their practice. In group mode, each participant holds one animal and generates questions from it. In self-supervision mode, an AI reads your case and selects the most relevant perspectives, tailoring the questions to your specific situation. In supervision prep mode, the same perspectives help you articulate what you are bringing to a human supervision session and arrive ready.</p>
+      <p>The design deliberately resists resolution. The perspectives generate questions, not answers. The aim is to widen inquiry, not close it down.</p>
+    </div>
+  </div>
+
+  <div class="about-caveat fade-in" style="max-width:580px">
+    <div class="about-caveat-title">Honest limitations</div>
+    <div class="about-caveat-body">
+      <p><strong>No relational presence.</strong> Supervision works through the quality of a real relationship: presence, attunement, the supervisor's genuine response to what they're hearing. This app can simulate curiosity but not experience it. It has no stake in the relationship, no felt sense, no counter-transference to notice and work with.</p>
+      <p><strong>No parallel process.</strong> One of supervision's most powerful phenomena, where the dynamics between coach and client are unconsciously re-enacted in the supervision relationship, cannot occur here. An AI cannot be recruited into a parallel process, and therefore cannot name one.</p>
+      <p><strong>No professional accountability.</strong> When a case involves safeguarding concerns, risk of harm, or complex ethical edges, supervision requires judgment grounded in professional responsibility. This app has no registration, no duty of care in any legally meaningful sense. It can surface a question; it cannot hold the weight of the responsibility.</p>
+      <p><strong>The risk of false closure.</strong> Well-formed questions and tidy frameworks can create an illusion of having been supervised. This app includes a specific prompt designed to counteract this, but the risk remains. If the process feels complete, treat that as data, not as a signal to stop.</p>
+      <p><strong>On the animal perspectives.</strong> The twelve perspectives used in this app were originally inspired by the animals of the Chinese Zodiac, reimagined and substantially redeveloped for coaching supervision. The zodiac connection has been set aside; what remains is a set of twelve distinct supervisory lenses, each held by an animal character chosen for how well it represents that perspective.</p>
+    </div>
+  </div>
+
+  <div class="about-positive fade-in" style="max-width:580px">
+    <div class="about-positive-title">What it can honestly offer</div>
+    <div class="about-positive-body">
+      <p><strong>Available between sessions.</strong> Human supervision is time-bounded. This app is available whenever a case is pressing: at 11pm before a difficult session, or immediately after one.</p>
+      <p><strong>Non-judgmental space.</strong> Some coaches find it easier to surface things they'd feel exposed bringing to a human supervisor, at least initially. This app can serve as a thinking-through space before a human conversation.</p>
+      <p><strong>Multiple perspectives simultaneously.</strong> The animal structure deliberately brings competing angles to bear on a single case, reducing the risk of tunnel vision.</p>
+      <p><strong>Widening access.</strong> Regular human supervision is expensive and not always accessible. Used honestly, this app can support coaches who would otherwise have no reflective space at all.</p>
+    </div>
+  </div>
+
+  <div class="about-section fade-in" style="max-width:580px">
+    <div class="about-section-title">A note on confidentiality</div>
+    <div class="about-body">
+      <p>In self-supervision and supervision prep modes, the text you write is sent to an AI language model for processing. Before submitting, please anonymise all client details: remove names, identifying roles, organisations, and any information that could identify the person you are writing about. Your clients have not consented to their situation being processed by an AI system.</p>
+    </div>
+  </div>
+
+  <div class="about-section fade-in" style="max-width:580px">
+    <div class="about-section-title">When to use human supervision instead</div>
+    <div class="about-body">
+      <p>If your case involves a safeguarding concern, a risk of harm to any person, a serious ethical dilemma, or significant distress in yourself as a coach, please bring it to a qualified human supervisor. This app will signal that too, but you don't need the app to tell you: if the stakes feel high, take it to a person.</p>
+    </div>
+  </div>
+
+  <button class="btn btn-ghost fade-in" style="max-width:300px" onclick="goTo('screen-landing')">&#8592; Back to start</button>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+</div>
+
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     EXPLORE THE ANIMALS
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="screen-explore" class="screen">
+  <div class="screen-header fade-in" style="width:100%;max-width:600px">
+    <div class="screen-label">The Supervision Council</div>
+    <div class="screen-title">Explore the Animals</div>
+  </div>
+  <div class="screen-body fade-in" style="max-width:600px">Twelve perspectives on coaching supervision, each held by a distinct animal. Together they form a complete supervisory landscape.</div>
+
+  <!-- FORMATIVE -->
+  <div class="explore-focus-group fade-in" style="max-width:600px">
+    <div class="explore-focus-label">Formative</div>
+    <div class="explore-focus-desc">Supervision that supports the coach's learning and professional development. These animals notice where growth is possible, where edges are being avoided, and where practice could deepen.</div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#129413;</div>
+        <div><div class="explore-animal-name">Eagle</div><div class="explore-animal-theme">Vision, Ambition &amp; Transformation</div></div>
+      </div>
+      <div class="explore-animal-body">Eagle sees from altitude. Where other animals are close to the ground, Eagle holds the long view, watching for what the client could become, what the coach might be underselling, and where genuine transformation is possible rather than incremental adjustment. Eagle asks the boldest questions and resists the pull toward the merely comfortable or achievable. In supervision, Eagle notices when the work has become too small for the person doing it.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128005;</div>
+        <div><div class="explore-animal-name">Tiger</div><div class="explore-animal-theme">Challenge, Stretch &amp; Avoidance</div></div>
+      </div>
+      <div class="explore-animal-body">Tiger notices what is not being said and where comfort has become collusion. This is the animal that names the unspoken, identifies where coach or client is playing safe, and asks what risk needs to be taken next. Tiger is not aggressive; it is precise. It does not challenge for the sake of it but because something important is being carefully avoided. In supervision, Tiger asks the question that creates a slight resistance in the room.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128018;</div>
+        <div><div class="explore-animal-name">Monkey</div><div class="explore-animal-theme">Experiment, Intervention &amp; Craft</div></div>
+      </div>
+      <div class="explore-animal-body">Monkey is interested in what the coach actually does in the room. Not the theory, not the intention, but the specific interventions, questions, and moves that either landed or did not. Monkey is playful, curious, and practically minded. It asks what could be tried differently, what small experiment would stretch the practice, and what the coach is defaulting to without noticing. In supervision, Monkey keeps the coach honest about their craft.</div>
+    </div>
+  </div>
+
+  <!-- NORMATIVE -->
+  <div class="explore-focus-group fade-in" style="max-width:600px">
+    <div class="explore-focus-label">Normative</div>
+    <div class="explore-focus-desc">Supervision that attends to professional standards, ethical responsibility, and the boundaries of the coaching role. These animals notice where the frame needs holding, where duty is at stake, and where clarity is being avoided.</div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#129442;</div>
+        <div><div class="explore-animal-name">Swan</div><div class="explore-animal-theme">Contract, Frame &amp; Ethics</div></div>
+      </div>
+      <div class="explore-animal-body">Swan is precise, disciplined, and unhurried. This animal holds the coaching frame with quiet authority, noticing where boundaries have blurred, where the contract needs revisiting, and where ethical edges are present. Swan does not raise alarms unnecessarily but it does not look away either. In supervision, Swan asks whether what is happening is still coaching, and whether the work is being conducted with appropriate rigour and care.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#129417;</div>
+        <div><div class="explore-animal-name">Owl</div><div class="explore-animal-theme">Clarity, Precision &amp; Truth-Telling</div></div>
+      </div>
+      <div class="explore-animal-body">Owl sees in the dark. It notices vagueness, polite indirection, and the things being named obliquely or not at all. Where other animals might soften the edges, Owl asks for precision. It holds the coach to account for what they are observing but not saying, what they know but are not naming. In supervision, Owl asks what the most accurate description of this situation actually is, and what is preventing the coach from saying it plainly.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128021;</div>
+        <div><div class="explore-animal-name">Dog</div><div class="explore-animal-theme">Loyalty, Duty &amp; Allegiances</div></div>
+      </div>
+      <div class="explore-animal-body">Dog is deeply loyal, and that loyalty is exactly what this animal examines. Whose interests is the coach most loyal to: the client, the sponsor, the organisation, their own professional comfort? Dog notices where protective instincts are operating, where duty is guiding well and where it is constraining. It also attends to the wider field of power and difference: the cultural assumptions, dynamics of identity, and structural realities that shape the coaching relationship and whose needs it serves. In supervision, Dog asks who is really being served by the choices the coach is making, whether the loyalty they are enacting is conscious and chosen, and whether there are dynamics of power, identity, or difference present that have not yet been examined.</div>
+    </div>
+  </div>
+
+  <!-- RESTORATIVE -->
+  <div class="explore-focus-group fade-in" style="max-width:600px">
+    <div class="explore-focus-label">Restorative</div>
+    <div class="explore-focus-desc">Supervision that attends to the coach's inner experience, wellbeing, and the relational quality of the work. These animals notice what is being carried, what is tender, and what the coach needs in order to continue working well.</div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128007;</div>
+        <div><div class="explore-animal-name">Rabbit</div><div class="explore-animal-theme">Relationship, Safety &amp; Alliance</div></div>
+      </div>
+      <div class="explore-animal-body">Rabbit is attuned to the emotional climate and the pace of the work. It notices where trust is fragile, where someone feels exposed or defended, and whether the coaching relationship has the safety it needs to do meaningful work. Rabbit does not avoid difficulty but insists that difficulty is held within a relationship that can bear it. In supervision, Rabbit asks what the coaching relationship needs right now, and whether the coach is moving at the right speed.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#129420;</div>
+        <div><div class="explore-animal-name">Deer</div><div class="explore-animal-theme">Vulnerability, Care &amp; the Unspoken Need</div></div>
+      </div>
+      <div class="explore-animal-body">Deer moves softly and senses what others miss. This animal attends to what the client has not yet been able to ask for, what is being carried quietly in the work, and whether the coach's care for the person is clear-eyed or softening what needs to be seen. Deer holds the somatic and embodied dimension: what the coach feels in the room, in their body, before language catches up. It also invites the coach to examine how their own history, values, and emotional life shape the quality of their presence and the nature of their care. In supervision, Deer asks what genuine attentiveness looks like here, and what the coach's own inner life is contributing to or withholding from the work.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128059;</div>
+        <div><div class="explore-animal-name">Bear</div><div class="explore-animal-theme">Meaning, Nourishment &amp; Sufficiency</div></div>
+      </div>
+      <div class="explore-animal-body">Bear knows how to rest, how to replenish, and what truly sustains. This animal asks what meaning the client and coach are each making of the work, whether there is a sense of sufficiency and abundance or something important feeling scarce, and what is genuinely nourishing about the coaching relationship. Bear notices depletion quietly but persistently. In supervision, Bear asks whether the work is feeding the people doing it, and whether what matters most is receiving the attention it deserves.</div>
+    </div>
+  </div>
+
+  <!-- GENERATIVE -->
+  <div class="explore-focus-group fade-in" style="max-width:600px">
+    <div class="explore-focus-label">Generative</div>
+    <div class="explore-focus-desc">Supervision that attends to patterns across practice, sustainability over time, and the coach's capacity to adapt and renew. These animals notice what is recurring, what is stagnating, and what resources are being drawn on or depleted.</div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#129451;</div>
+        <div><div class="explore-animal-name">Beaver</div><div class="explore-animal-theme">Resources, Sustainability &amp; Adaptive Capacity</div></div>
+      </div>
+      <div class="explore-animal-body">Beaver is purposeful and resourceful. It notices what the coach and client are actually drawing on, where over-reliance on a single approach is limiting the work, and where depletion is showing up. But Beaver also looks beyond the individual to the conditions that shape what is available: the organisational pressures, professional expectations, and structural realities that constrain or enable the work. In supervision, Beaver asks what adaptive moves have not yet been tried, and whether the constraints the coach is working within are personal or systemic.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128058;</div>
+        <div><div class="explore-animal-name">Wolf</div><div class="explore-animal-theme">Sense-making, Pattern &amp; Timing</div></div>
+      </div>
+      <div class="explore-animal-body">Wolf reads the system. It notices what keeps recurring, what the dynamics in a case echo from other cases, and what the coach's own responses might be telling them about a deeper pattern. Wolf is patient and attuned, waiting for the right moment before acting. It holds the parallel process dimension: the way dynamics between coach and client can be re-enacted in the supervision relationship itself. Wolf also attends to the coach's own perceptual lens, how their background, experience, and assumptions shape what they notice and what they miss. In supervision, Wolf asks what pattern is present here that has been present before, what this situation is activating in the coach, and whether what is recurring belongs to the individual, the relationship, or something wider.</div>
+    </div>
+
+    <div class="explore-animal">
+      <div class="explore-animal-head">
+        <div class="explore-animal-icon">&#128014;</div>
+        <div><div class="explore-animal-name">Horse</div><div class="explore-animal-theme">Direction, Energy &amp; Movement</div></div>
+      </div>
+      <div class="explore-animal-body">Horse notices when the coaching has lost its momentum or its direction. It asks whether the work is actually moving the client, where drift or stagnation has set in, and whether the coach is colluding with a comfortable lack of progress. Horse is not impatient; it is oriented. It wants to know where the work is going and whether the energy in the room is generative or spent. In supervision, Horse asks what shift in direction or pace is needed, and whether the coach has noticed they have stopped moving.</div>
+    </div>
+  </div>
+
+  <button class="btn btn-ghost fade-in" style="max-width:300px" onclick="goTo('screen-landing')">&#8592; Back to start</button>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+</div>
+
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     GROUP: role selection
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="screen-role" class="screen">
+  <div class="screen-header fade-in">
+    <div class="screen-label">Group Supervision</div>
+    <div class="screen-title">Choose Your Role</div>
+  </div>
+  <div class="screen-body fade-in">Each person in the group takes one role for this session.</div>
+  <div class="role-grid fade-in" style="max-width:480px;width:100%">
+    <div class="role-card" onclick="selectRole('client')">
+      <div class="role-icon">&#129681;</div>
+      <div><div class="role-name">Client</div><div class="role-desc">Bringing a real coaching scenario to explore</div></div>
+    </div>
+    <div class="role-card" onclick="selectRole('supervisor')">
+      <div class="role-icon">&#127919;</div>
+      <div><div class="role-name">Supervisor &amp; Timekeeper</div><div class="role-desc">Running the supervision conversation and holding the structure and time for the group</div></div>
+    </div>
+    <div class="role-card" onclick="goTo('screen-animal')">
+      <div class="role-icon">&#128301;</div>
+      <div><div class="role-name">Observer: Animal Perspective</div><div class="role-desc">Watching through one of the twelve animal perspectives</div></div>
+    </div>
+  </div>
+  <button class="btn btn-ghost" style="max-width:300px;margin-top:.5rem" onclick="goTo('screen-landing')">&#8592; Back</button>
+</div>
+
+<!-- GROUP: animal selection -->
+<div id="screen-animal" class="screen">
+  <div class="screen-header fade-in">
+    <div class="screen-label">Group Supervision</div>
+    <div class="screen-title">Which animal are you?</div>
+  </div>
+  <div class="screen-body fade-in">Each animal represents a distinct supervisory perspective. Choose one to carry through the session.</div>
+  <div class="animal-grid fade-in" style="max-width:540px;width:100%">
+    <div class="animal-card animal-eagle"  onclick="selectAnimal('eagle')"> <div class="animal-icon">&#129413;</div><div class="animal-name">Eagle</div>  <div class="animal-theme">Vision &amp; Transformation</div></div>
+    <div class="animal-card animal-tiger"  onclick="selectAnimal('tiger')"> <div class="animal-icon">&#128005;</div><div class="animal-name">Tiger</div>  <div class="animal-theme">Challenge &amp; Stretch</div></div>
+    <div class="animal-card animal-monkey" onclick="selectAnimal('monkey')"><div class="animal-icon">&#128018;</div><div class="animal-name">Monkey</div> <div class="animal-theme">Experiment &amp; Craft</div></div>
+    <div class="animal-card animal-swan"   onclick="selectAnimal('swan')">  <div class="animal-icon">&#129442;</div><div class="animal-name">Swan</div>   <div class="animal-theme">Contract &amp; Ethics</div></div>
+    <div class="animal-card animal-owl"    onclick="selectAnimal('owl')">   <div class="animal-icon">&#129417;</div><div class="animal-name">Owl</div>    <div class="animal-theme">Clarity &amp; Truth-Telling</div></div>
+    <div class="animal-card animal-dog"    onclick="selectAnimal('dog')">   <div class="animal-icon">&#128021;</div><div class="animal-name">Dog</div>    <div class="animal-theme">Loyalty &amp; Allegiances</div></div>
+    <div class="animal-card animal-rabbit" onclick="selectAnimal('rabbit')"><div class="animal-icon">&#128007;</div><div class="animal-name">Rabbit</div> <div class="animal-theme">Relationship &amp; Safety</div></div>
+    <div class="animal-card animal-deer"   onclick="selectAnimal('deer')">  <div class="animal-icon">&#129420;</div><div class="animal-name">Deer</div>   <div class="animal-theme">Care &amp; the Unspoken</div></div>
+    <div class="animal-card animal-bear"   onclick="selectAnimal('bear')">  <div class="animal-icon">&#128059;</div><div class="animal-name">Bear</div>   <div class="animal-theme">Meaning &amp; Nourishment</div></div>
+    <div class="animal-card animal-beaver" onclick="selectAnimal('beaver')"><div class="animal-icon">&#129451;</div><div class="animal-name">Beaver</div> <div class="animal-theme">Resources &amp; Sustainability</div></div>
+    <div class="animal-card animal-wolf"   onclick="selectAnimal('wolf')">  <div class="animal-icon">&#128058;</div><div class="animal-name">Wolf</div>   <div class="animal-theme">Pattern &amp; Timing</div></div>
+    <div class="animal-card animal-horse"  onclick="selectAnimal('horse')"> <div class="animal-icon">&#128014;</div><div class="animal-name">Horse</div>  <div class="animal-theme">Direction &amp; Energy</div></div>
+  </div>
+  <button class="btn btn-ghost" style="max-width:300px;margin-top:.5rem" onclick="goTo('screen-role')">&#8592; Back</button>
+</div>
+
+<!-- GROUP: live phase -->
+<div id="screen-phase" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:520px">
+    <div id="role-badge" class="role-badge"></div>
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+  <div class="timer-ring-wrap fade-in" id="timer-wrap">
+    <div class="timer-ring">
+      <svg viewBox="0 0 140 140">
+        <circle class="timer-track" cx="70" cy="70" r="60"/>
+        <circle class="timer-arc" id="timer-arc" cx="70" cy="70" r="60" stroke-dasharray="376.99" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-display">
+        <div class="timer-time" id="timer-display">--:--</div>
+        <div class="timer-label" id="timer-phase-label">READY</div>
+      </div>
+    </div>
+    <div class="timer-controls">
+      <button class="btn btn-ghost btn-sm w-full" id="btn-startstop" onclick="toggleTimer()">&#9654; Start</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetPhaseTimer()" style="flex-shrink:0;padding:.6rem .8rem">&#8634;</button>
+    </div>
+  </div>
+  <div id="phase-alert" class="phase-alert">&#9200; Time is up for this phase.</div>
+  <div class="phase-card fade-in">
+    <div class="phase-number" id="phase-number"></div>
+    <div class="phase-name"   id="phase-name"></div>
+    <div class="phase-instruction" id="phase-instruction"></div>
+  </div>
+  <div id="checklist-panel" class="checklist-panel hidden fade-in">
+    <div class="checklist-title">Facilitation Checklist</div>
+    <div id="checklist-items"></div>
+  </div>
+  <div id="lens-panel" class="lens-panel hidden fade-in">
+    <div class="lens-header">
+      <div class="lens-icon" id="lens-icon"></div>
+      <div><div class="lens-name" id="lens-name"></div><div class="lens-focus" id="lens-focus"></div></div>
+    </div>
+    <ul class="lens-questions" id="lens-questions"></ul>
+    <div class="lens-notice" id="lens-notice"></div>
+  </div>
+  <div style="width:100%;max-width:520px" id="notes-wrap" class="hidden">
+    <div class="notes-label">Your notes</div>
+    <textarea class="notes-area" id="notes-area" placeholder="" rows="4"></textarea>
+  </div>
+  <div style="display:flex;gap:.75rem;width:100%;max-width:520px;margin-top:.25rem">
+    <button class="btn btn-ghost" onclick="prevPhase()" id="btn-prev" style="flex:1">&#8592; Prev</button>
+    <button class="btn btn-primary" onclick="nextPhase()" id="btn-next" style="flex:2">Next Phase &#8594;</button>
+  </div>
+</div>
+
+<!-- GROUP: close -->
+<div id="screen-close" class="screen">
+  <div style="font-size:3rem" class="fade-in">&#127765;</div>
+  <div class="screen-label fade-in">Session Complete</div>
+  <div class="reflection-prompt fade-in">
+    <strong style="font-family:'Cinzel',serif;font-size:.87rem;letter-spacing:.05em;color:var(--accent-lt)">Closing Reflection</strong><br><br>
+    What did these animal perspectives allow us to see in this case that we might not have seen otherwise?
+  </div>
+  <div id="final-notes-wrap" class="hidden w-full" style="max-width:500px">
+    <div class="notes-label">Your final reflection</div>
+    <textarea class="notes-area" id="final-notes" placeholder="What opened up for you? What's the most important line of inquiry?" rows="5"></textarea>
+  </div>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+  <button class="btn btn-ghost" style="max-width:300px" onclick="restart()">&#8592; Return to Start</button>
+</div>
+
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     SELF-SUPERVISION: Case input
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="ss-case" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Self-Supervision</div>
+    <div class="screen-title">What Are You Bringing?</div>
+  </div>
+  <div class="screen-body fade-in">Write freely about what you want to think about. This might be a specific client situation, something you're noticing across your work, a question about your own practice, or something that's simply been sitting with you.</div>
+
+  <div class="privacy-notice fade-in">
+    <strong>Before you write</strong>
+    Please anonymise your client: remove their name, role, organisation, and any details that could identify them. Your clients have not consented to their situation being processed by an AI. What you write here will be sent to an AI language model.
+  </div>
+
+  <textarea id="ss-case-input" class="case-area fade-in"
+    placeholder="What I want to bring is&#8230;&#10;What feels unresolved or unclear is&#8230;&#10;What this situation brings up in me is&#8230;"
+    rows="8"></textarea>
+
+  <div class="ethics-alert fade-in" id="ss-ethics-alert">
+    <div class="ethics-alert-title">&#9888; This may need human supervision</div>
+    <div class="ethics-alert-body" id="ss-ethics-alert-body"></div>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('screen-landing')">&#8592; Back</button>
+    <button class="btn btn-primary" style="flex:2" onclick="ssCaseSubmit()">Continue &#8594;</button>
+  </div>
+</div>
+
+<!-- SS: Thinking 1 -->
+<div id="ss-thinking" class="screen">
+  <div class="thinking-orb" id="ss-thinking-orb">&#129694;</div>
+  <div class="thinking-title" id="ss-thinking-title">Reading what you're bringing&#8230;</div>
+  <div class="thinking-sub"   id="ss-thinking-sub">Taking a moment to understand your situation before selecting perspectives.</div>
+  <div class="thinking-dots"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>
+  <div id="ss-thinking-error" class="thinking-error hidden"></div>
+  <button id="ss-thinking-retry" class="btn btn-ghost hidden" style="max-width:260px;margin-top:1rem" onclick="goTo('ss-case')">&#8592; Edit my case</button>
+</div>
+
+<!-- SS: Clarification -->
+<div id="ss-clarify" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Self-Supervision: Clarification</div>
+    <div class="screen-title">Before We Go Further</div>
+  </div>
+  <div class="screen-body fade-in">Here is what the app understands you're bringing. Add anything that sharpens the picture, then answer the question below.</div>
+
+  <div class="clarify-summary fade-in">
+    <div class="clarify-summary-label">What I understand you're bringing</div>
+    <div class="clarify-summary-body" id="ss-clarify-summary"></div>
+  </div>
+
+  <div class="clarify-questions fade-in" id="ss-clarify-questions-wrap">
+    <div class="clarify-q-label">To sharpen the picture</div>
+    <div id="ss-clarify-questions"></div>
+  </div>
+
+  <div class="clarify-questions fade-in">
+    <div class="clarify-q-label">Your response</div>
+    <textarea class="clarify-area" id="ss-clarify-response" placeholder="Add anything that sharpens the picture, or leave blank if the summary captures it well&#8230;" rows="4"></textarea>
+  </div>
+
+  <div class="clarify-nudge fade-in">You can leave the response blank if the summary captures it well.</div>
+
+  <div class="clarify-outcome-block fade-in">
+    <div class="clarify-outcome-label">Your outcome for this session</div>
+    <div class="clarify-outcome-q">What does a good outcome from this session look like for you?</div>
+    <textarea class="clarify-area" id="ss-outcome-input" placeholder="A good outcome would be&#8230;" rows="3"></textarea>
+  </div>
+
+  <div class="advice-alert fade-in" id="ss-advice-alert">
+    <div class="advice-alert-title">A note on supervision</div>
+    <div class="advice-alert-body">Supervision works differently from consultancy or mentoring. Your supervisor won't tell you what to do, but will work with you to gain perspective, surface what you already know, and identify options. You might want to reframe what you're hoping for with that in mind.</div>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%;margin-top:.5rem" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('ss-case')">&#8592; Edit case</button>
+    <button class="btn btn-primary" style="flex:2" onclick="ssClarifySubmit()">Select My Perspectives &#8594;</button>
+  </div>
+</div>
+
+<!-- SS: Thinking 2 -->
+<div id="ss-thinking2" class="screen">
+  <div class="thinking-orb" id="ss-thinking2-orb">&#129694;</div>
+  <div class="thinking-title">Selecting your perspectives&#8230;</div>
+  <div class="thinking-sub">Choosing the animals most relevant to what you've brought.</div>
+  <div class="thinking-dots"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>
+  <div id="ss-thinking2-error" class="thinking-error hidden"></div>
+  <button id="ss-thinking2-retry" class="btn btn-ghost hidden" style="max-width:260px;margin-top:1rem" onclick="goTo('ss-clarify')">&#8592; Back</button>
+</div>
+
+<!-- SS: Reflect -->
+<div id="ss-reflect" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Self-Supervision: Reflect</div>
+    <div class="screen-title">Your Perspectives</div>
+  </div>
+  <div class="screen-body fade-in">Sit with the questions each perspective is asking of you. Write what surfaces, however partial or uncertain.</div>
+
+  <div class="ai-choice-banner fade-in">
+    <strong>Why these perspectives</strong>
+    <span id="ss-ai-rationale"></span>
+  </div>
+
+  <div class="somatic-prompt fade-in">
+    <div class="somatic-title">Before you read: notice your body</div>
+    <div class="somatic-body">What are you feeling as you approach this right now? What does your body tell you: tension, weight, energy, avoidance? Note it before the questions shape your thinking.</div>
+    <textarea class="somatic-area" id="ss-somatic-input" placeholder="I notice&#8230;" rows="3"></textarea>
+  </div>
+
+  <div id="ss-reflect-blocks" style="width:100%;display:flex;flex-direction:column;gap:1.5rem" class="fade-in"></div>
+
+  <div class="unsettle-block fade-in">
+    <div class="unsettle-title">The question that unsettled you most</div>
+    <div class="unsettle-body">Not the most comfortable question; the one that created a slight resistance, or opened something you'd rather leave closed. Name it here.</div>
+    <textarea class="unsettle-area" id="ss-unsettle-input" placeholder="The question I most want to avoid is&#8230;" rows="3"></textarea>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%;margin-top:.5rem" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('ss-clarify')">&#8592; Back</button>
+    <button class="btn btn-primary" style="flex:2" onclick="ssReflectNext()">See My Summary &#8594;</button>
+  </div>
+</div>
+
+<!-- SS: Summary -->
+<div id="ss-summary" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Self-Supervision: Summary</div>
+    <div class="screen-title">Questions to Sit With</div>
+  </div>
+  <div class="screen-body fade-in">These are the questions your perspectives surface for this case. Bring this to your next human supervision session.</div>
+  <div class="summary-block fade-in" id="ss-summary-content"></div>
+  <div style="display:flex;align-items:center;gap:1rem;width:100%" class="fade-in">
+    <button class="copy-btn" onclick="ssCopy()">Copy to clipboard</button>
+    <span class="copy-confirm" id="ss-copy-confirm">Copied &#10003;</span>
+  </div>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+  <button class="btn btn-ghost" style="max-width:320px" onclick="restart()">&#8592; Return to Start</button>
+</div>
+
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+     SUPERVISION PREP: Case input
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<div id="sp-case" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Supervision Prep</div>
+    <div class="screen-title">What Are You Bringing?</div>
+  </div>
+  <div class="screen-body fade-in">Describe what you want to bring to your supervision session. This might be a specific client situation, something you're noticing across your work, a question about your own practice, or something that's been sitting with you.</div>
+
+  <div class="privacy-notice fade-in">
+    <strong>Before you write</strong>
+    Please anonymise your client: remove their name, role, organisation, and any details that could identify them. Your clients have not consented to their situation being processed by an AI. What you write here will be sent to an AI language model.
+  </div>
+
+  <textarea id="sp-case-input" class="case-area fade-in"
+    placeholder="What I want to bring to supervision is&#8230;&#10;What feels unresolved or unclear is&#8230;&#10;What this brings up in me as a practitioner is&#8230;"
+    rows="8"></textarea>
+
+  <div class="ethics-alert fade-in" id="sp-ethics-alert">
+    <div class="ethics-alert-title">&#9888; This may need human supervision urgently</div>
+    <div class="ethics-alert-body" id="sp-ethics-alert-body"></div>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('screen-landing')">&#8592; Back</button>
+    <button class="btn btn-primary" style="flex:2" onclick="spCaseSubmit()">Continue &#8594;</button>
+  </div>
+</div>
+
+<!-- SP: Thinking 1 -->
+<div id="sp-thinking" class="screen">
+  <div class="thinking-orb" id="sp-thinking-orb">&#129517;</div>
+  <div class="thinking-title" id="sp-thinking-title">Reading what you're bringing&#8230;</div>
+  <div class="thinking-sub"   id="sp-thinking-sub">Taking a moment to understand your situation before selecting perspectives.</div>
+  <div class="thinking-dots"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>
+  <div id="sp-thinking-error" class="thinking-error hidden"></div>
+  <button id="sp-thinking-retry" class="btn btn-ghost hidden" style="max-width:260px;margin-top:1rem" onclick="goTo('sp-case')">&#8592; Edit my case</button>
+</div>
+
+<!-- SP: Clarification -->
+<div id="sp-clarify" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Supervision Prep: Clarification</div>
+    <div class="screen-title">Before We Go Further</div>
+  </div>
+  <div class="screen-body fade-in">Here is what the app understands you're bringing. Add anything that sharpens the picture, then answer the question below.</div>
+
+  <div class="clarify-summary fade-in">
+    <div class="clarify-summary-label">What I understand you're bringing</div>
+    <div class="clarify-summary-body" id="sp-clarify-summary"></div>
+  </div>
+
+  <div class="clarify-questions fade-in" id="sp-clarify-questions-wrap">
+    <div class="clarify-q-label">To sharpen the picture</div>
+    <div id="sp-clarify-questions"></div>
+  </div>
+
+  <div class="clarify-questions fade-in">
+    <div class="clarify-q-label">Your response</div>
+    <textarea class="clarify-area" id="sp-clarify-response" placeholder="Add anything that sharpens the picture, or leave blank if the summary captures it well&#8230;" rows="4"></textarea>
+  </div>
+
+  <div class="clarify-nudge fade-in">You can leave the response blank if the summary captures it well.</div>
+
+  <div class="clarify-outcome-block fade-in">
+    <div class="clarify-outcome-label">Your outcome for this session</div>
+    <div class="clarify-outcome-q">What does a good outcome from this supervision session look like for you?</div>
+    <textarea class="clarify-area" id="sp-outcome-input" placeholder="A good outcome would be&#8230;" rows="3"></textarea>
+  </div>
+
+  <div class="advice-alert fade-in" id="sp-advice-alert">
+    <div class="advice-alert-title">A note on supervision</div>
+    <div class="advice-alert-body">Supervision works differently from consultancy or mentoring. Your supervisor won't tell you what to do, but will work with you to gain perspective, surface what you already know, and identify options. You might want to reframe what you're hoping for with that in mind.</div>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%;margin-top:.5rem" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('sp-case')">&#8592; Edit case</button>
+    <button class="btn btn-primary" style="flex:2" onclick="spClarifySubmit()">Select My Perspectives &#8594;</button>
+  </div>
+</div>
+
+<!-- SP: Thinking 2 -->
+<div id="sp-thinking2" class="screen">
+  <div class="thinking-orb" id="sp-thinking2-orb">&#129517;</div>
+  <div class="thinking-title">Selecting your perspectives&#8230;</div>
+  <div class="thinking-sub">Choosing the animals most relevant to your supervision preparation.</div>
+  <div class="thinking-dots"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div>
+  <div id="sp-thinking2-error" class="thinking-error hidden"></div>
+  <button id="sp-thinking2-retry" class="btn btn-ghost hidden" style="max-width:260px;margin-top:1rem" onclick="goTo('sp-clarify')">&#8592; Back</button>
+</div>
+
+<!-- SP: Focus -->
+<div id="sp-focus" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Supervision Prep: Lenses</div>
+    <div class="screen-title">Through These Perspectives</div>
+  </div>
+  <div class="screen-body fade-in">Each perspective surfaces questions to help you think through what you're bringing. Use these to clarify your thinking before the session.</div>
+
+  <div class="ai-choice-banner fade-in">
+    <strong>Why these perspectives</strong>
+    <span id="sp-ai-rationale"></span>
+  </div>
+
+  <div id="sp-focus-blocks" style="width:100%;display:flex;flex-direction:column;gap:1.5rem" class="fade-in"></div>
+
+  <div class="somatic-prompt fade-in" style="background:rgba(35,60,100,0.12);border-color:rgba(91,157,181,0.25)">
+    <div class="somatic-title" style="color:#88a8c4">My intention going into supervision</div>
+    <div class="somatic-body">Having thought through these perspectives, what is the most important thing you want to bring to supervision? What do you most need your supervisor to know?</div>
+    <textarea class="somatic-area" id="sp-intention-input" style="border-color:rgba(91,157,181,0.2)" placeholder="What I most want my supervisor to know is&#8230;" rows="3"></textarea>
+  </div>
+
+  <div style="display:flex;gap:.75rem;width:100%;margin-top:.5rem" class="fade-in">
+    <button class="btn btn-ghost" style="flex:1" onclick="goTo('sp-clarify')">&#8592; Back</button>
+    <button class="btn btn-primary" style="flex:2" onclick="spFocusNext()">See My Prep Note &#8594;</button>
+  </div>
+</div>
+
+<!-- SP: Summary -->
+<div id="sp-summary" class="screen">
+  <div class="screen-header fade-in" style="width:100%">
+    <div class="screen-label">Supervision Prep: Note</div>
+    <div class="screen-title">Your Supervision Brief</div>
+  </div>
+  <div class="screen-body fade-in">A preparation note for your supervision session. Copy it to share with your supervisor, or use it as your own reference going in.</div>
+  <div class="summary-block fade-in" id="sp-summary-content"></div>
+  <div class="share-note fade-in">Prepared using a structured reflective tool. A starting point for supervision, not a replacement for it.</div>
+  <div style="display:flex;align-items:center;gap:1rem;width:100%" class="fade-in">
+    <button class="copy-btn" onclick="spCopy()">Copy to clipboard</button>
+    <span class="copy-confirm" id="sp-copy-confirm">Copied &#10003;</span>
+  </div>
+  <div class="ornament fade-in">&#10022; &#10022; &#10022;</div>
+  <button class="btn btn-ghost" style="max-width:320px" onclick="restart()">&#8592; Return to Start</button>
+</div>
+
+
+<script>
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// ANIMAL DATA
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+const ANIMALS = {
+
+  // FORMATIVE
+  eagle: { icon:'&#129413;', name:'Eagle', theme:'Vision, Ambition & Transformation',
+    focus:'The possibility of real change and what it would take',
+    notices:'the client\'s vision of the future, limiting beliefs, the coach\'s own sense of possibility, transformational potential being underseen',
+    hint:'Use this perspective when the work feels small relative to what might be possible, or when the client seems constrained by a narrow view of their own potential.',
+    questions:['What is the boldest version of what this client could achieve, and what stands between them and it?','Is the coaching oriented towards real transformation, or just incremental adjustment?','What does the client most deeply want, beneath what they are asking for?'],
+    blind:'Beware grandiosity, inflation of what is possible, or losing sight of the ground beneath ambitious vision.',
+    color:'rgba(35,70,60,0.5)' },
+
+  tiger: { icon:'&#128005;', name:'Tiger', theme:'Challenge, Stretch & Avoidance',
+    focus:'The edge of learning and growth',
+    notices:'collusion, comfort zones, unspoken issues, stuck patterns',
+    hint:'Use this perspective when you suspect you or the client may be playing safe, or when something important is going unsaid.',
+    questions:['Where am I playing safe in this work?','What is not being said, by me or by the client?','What risk do I need to take in the next session?'],
+    blind:'Beware overwhelming, damaging trust, or pushing too hard.',
+    color:'rgba(110,55,30,0.5)' },
+
+  monkey: { icon:'&#128018;', name:'Monkey', theme:'Experiment, Intervention & Craft',
+    focus:'What I actually do in sessions',
+    notices:'interventions, questions, structure, tactics, micro-skills',
+    hint:'Use this perspective when you want to focus on craft: what you\'re actually doing in the room and what you might try differently.',
+    questions:['What could I try differently in the next session?','What small experiment would stretch my practice?','Which of my recent interventions landed, and which didn\'],
+    blind:'Beware becoming scattered, superficial, or under-theorised.',
+    color:'rgba(35,60,100,0.5)' },
+
+  // NORMATIVE
+  swan: { icon:'&#129442;', name:'Swan', theme:'Contract, Frame & Ethics',
+    focus:'The coaching and supervision frame',
+    notices:'boundaries, role clarity, scope of practice, ethics, contracting',
+    hint:'Use this perspective when something feels unclear about the contract, scope, or ethics of the work.',
+    questions:['Is this still coaching? Is the contract clear and being held?','Where do boundaries need tightening?','Are there ethical or safeguarding edges here?'],
+    blind:'Beware becoming rigid, overly procedural, or risk-averse.',
+    color:'rgba(60,80,110,0.5)' },
+
+  owl: { icon:'&#129417;', name:'Owl', theme:'Clarity, Precision & Truth-Telling',
+    focus:'What is being seen clearly, and what is being obscured',
+    notices:'vagueness, avoidance of specificity, things being named obliquely or not at all, what the coach observes but doesn\'t say',
+    hint:'Use this perspective when something is going unnamed: when the work is obscured by vagueness, politeness, or imprecision, or when the coach has an observation they are not voicing.',
+    questions:['What am I seeing in this case that I am not yet saying out loud?','Where is vagueness or polite indirection preventing the work from sharpening?','What is the most precise way to name what is actually happening here?'],
+    blind:'Beware bluntness that wounds without purpose, or precision that serves the coach\'s need for clarity more than the client\'s need for care.',
+    color:'rgba(80,60,25,0.5)' },
+
+  dog: { icon:'&#128021;', name:'Dog', theme:'Loyalty, Duty & Allegiances',
+    focus:'Who the coach is most loyal to, what power dynamics are present, and whether those are being examined',
+    notices:'professional duty, unconscious allegiances to client, sponsor, organisation or ideology, protective instincts, power dynamics, cultural assumptions, difference and identity, whose interests are really being served',
+    hint:'Use this perspective when you want to examine where your loyalty is sitting in this system, what dynamics of power or difference may be operating, and whether those are shaping the work in ways you have not yet made visible.',
+    questions:['Whose interests am I most loyal to in this work, and is that loyalty conscious and chosen?','What dynamics of power, culture, or difference might be present here that I have not yet examined?','Where is my sense of professional duty guiding me well, and where might it be limiting what I can see?'],
+    blind:'Becoming so alert to systemic dynamics that the immediate relational and practical dimensions of the work are overlooked.',
+    color:'rgba(70,50,30,0.5)' },
+
+  // RESTORATIVE
+  rabbit: { icon:'&#128007;', name:'Rabbit', theme:'Relationship, Safety & Alliance',
+    focus:'The human and relational field',
+    notices:'trust, vulnerability, emotional climate, pace, psychological safety',
+    hint:'Use this perspective when you sense something in the relationship: trust, pace, exposure, that isn\'t being named.',
+    questions:['What does the relationship need to stay workable?','Where might someone feel exposed or defended?','Is the coach moving too fast or too hard?'],
+    blind:'Beware avoiding necessary difficulty or colluding with comfort.',
+    color:'rgba(90,55,100,0.5)' },
+
+  deer: { icon:'&#129420;', name:'Deer', theme:'Vulnerability, Care & the Unspoken Need',
+    focus:'What is tender, unspoken, or most deeply needed, and how the coach\'s own inner life is shaping their presence',
+    notices:'unmet needs, what the client cannot yet ask for, the coach\'s own emotional and personal history, embodied and somatic responses, the quality of care, what is being carried quietly',
+    hint:'Use this perspective when you sense there is something the client needs but has not named, when the emotional and bodily texture of the work deserves attention, or when you want to examine how your own history or emotional life is shaping what you bring.',
+    questions:['What is this client carrying that they have not yet been able to name, and how do I know?','What am I feeling in my body in relation to this person, and what might that be telling me?','How is my own history or emotional life shaping the care I am bringing, and is that serving this client?'],
+    blind:'Becoming so attuned to vulnerability that the work loses its capacity to challenge.',
+    color:'rgba(60,85,55,0.5)' },
+
+  bear: { icon:'&#128059;', name:'Bear', theme:'Meaning, Nourishment & Sufficiency',
+    focus:'What is genuinely nourishing, and what is depleting, in this coaching',
+    notices:'the meaning client and coach are making of the work, what genuinely sustains them, abundance and depletion, the coach\'s own relationship to fulfilment in the work',
+    hint:'Use this perspective when you want to explore the deeper meaning dimension of the work: what truly sustains coach and client, and whether the coaching is attending to what matters most.',
+    questions:['What meaning is this client making of their experience, and is that meaning serving them?','What is genuinely nourishing about this work for both coach and client, and what is depleting it?','Is there a sense of sufficiency and abundance in the coaching, or is something important feeling scarce?'],
+    blind:'Beware complacency, over-optimism, or an excessive focus on what feels good at the expense of what is true.',
+    color:'rgba(70,35,55,0.5)' },
+
+  // GENERATIVE
+  beaver: { icon:'&#129451;', name:'Beaver', theme:'Resources, Sustainability & Adaptive Capacity',
+    focus:'What is being used, conserved, or depleted in this work, and what conditions are creating it',
+    notices:'resourcefulness, over-reliance on one approach, depletion in coach or client, systemic and organisational pressures, adaptive capacity, what has not yet been tried',
+    hint:'Use this perspective when you sense either coach or client is running on empty, over-relying on a single strategy, or when the constraints shaping the work may be worth examining.',
+    questions:['What resources, inner, relational and practical, am I actually drawing on, and what is going untapped?','Where is depletion showing up in me, in my client, or in the conditions we are both working within?','What constraints am I treating as fixed that might in fact be open to challenge or negotiation?'],
+    blind:'Becoming so focused on what is available that what is structurally absent goes unquestioned.',
+    color:'rgba(40,55,70,0.5)' },
+
+  wolf: { icon:'&#128058;', name:'Wolf', theme:'Sense-making, Pattern & Timing',
+    focus:'Understanding what is really going on, what keeps recurring, and what my own lens is contributing to what I see',
+    notices:'patterns across cases, recurring dynamics, the coach\'s own perceptual and experiential lens, parallel process between coach-client and supervisee-supervisor relationships, systemic dynamics, timing',
+    hint:'Use this perspective when you sense a pattern recurring, when you want to examine what your own history or assumptions might be bringing to the work, or when something in the supervisory relationship seems to echo the coaching one.',
+    questions:['What pattern keeps appearing in this work, and where else have I encountered it?','What is this situation activating in me, and what does that tell me about my own lens as a practitioner?','Is what is recurring personal, relational, or structural in origin?'],
+    blind:'Finding patterns everywhere and losing sight of what is genuinely new or particular.',
+    color:'rgba(35,65,55,0.5)' },
+
+  horse: { icon:'&#128014;', name:'Horse', theme:'Direction, Energy & Movement',
+    focus:'Whether the coaching is going anywhere',
+    notices:'drift, stagnation, loss of momentum, avoidance of change',
+    hint:'Use this perspective when the coaching feels like it\'s circling or stalling, or when you\'ve lost a sense of direction.',
+    questions:['Is this coaching actually moving the client? Where?','Where is it stuck or going in circles?','What shift in direction or pace is needed from me?'],
+    blind:'Beware rushing, destabilising, or burning containment and trust.',
+    color:'rgba(100,35,45,0.5)' }
+};
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// ETHICS AND ADVICE PATTERNS
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+const ETHICS_PATTERNS = [
+  { pattern:/\b(suicid|self.harm|harming (them|himself|herself|themselves))\b/i,
+    msg:'Your description mentions possible self-harm or suicidal ideation. This requires immediate attention from a qualified human supervisor or, if urgent, direct contact with a crisis service. Please do not use this app as your primary resource for this situation.' },
+  { pattern:/\b(safeguard|child (at risk|protection)|abuse|neglect|exploitation)\b/i,
+    msg:'Your description suggests a potential safeguarding concern. Safeguarding situations require human judgment and professional accountability. Please bring this to a qualified human supervisor without delay.' },
+  { pattern:/\b(serious (harm|risk)|risk (of harm|to (their|his|her|someone)))\b/i,
+    msg:'Your description suggests a risk of serious harm. This needs human supervision: a qualified supervisor who can hold professional responsibility alongside you.' },
+  { pattern:/\b(ethical (dilemma|breach|violation)|code of (conduct|ethics)|dual relationship|conflict of interest)\b/i,
+    msg:'Your description touches on a significant ethical concern. Ethical dilemmas benefit from human supervisory judgment, collegial discussion, and professional body guidance. This app can help you think, but don\'t stop here.' }
+];
+
+const ADVICE_PATTERNS = /\b(want (answers?|advice|guidance|to be told|direction|solutions?)|need (answers?|advice|to know what to do|guidance|direction|solutions?)|tell me what to do|just tell me|give me (the answer|advice|guidance|a solution)|advice on|looking for advice)\b/i;
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// GROUP PHASES
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+const GROUP_PHASES = [
+  { number:'Phase 1', name:'Set-up & Contracting', duration:3*60,
+    instructions:{
+      client:'Prepare to bring your coaching situation. Think of a real case, or a theme or pattern in your practice: what is the core challenge or question you want to explore today?',
+      supervisor:'Set up the session. Assign each observer their animal perspective. Brief the group: they will listen silently and generate questions from their perspective only, no interruptions, no advice.',
+      observer:'You\'re about to receive your animal perspective. Your job is to listen from that single viewpoint and prepare questions, not advice or analysis, for the client.'
+    },
+    checklist:['Animal perspectives assigned, one per observer','Group briefed: listen silently, questions only','Client ready to share their case','Timer set for Phase 2'],
+    observerActive:false, notesPrompt:null },
+
+  { number:'Phase 2', name:'Live Supervision Conversation', duration:10*60,
+    instructions:{
+      client:'Share your case with the supervisor. Be open: bring the real texture of the coaching, not just the facts. The group are listening silently.',
+      supervisor:'Work with the client as you normally would. Listen deeply. Ask questions. Stay curious. When time is up, bring the conversation to a natural pause.',
+      observer:'Listen silently. Write questions for the client from your perspective only. Do not speak. Notice what your animal sees that others might miss.'
+    },
+    checklist:null, observerActive:true, notesPrompt:'Write questions for the client from your perspective&#8230;' },
+
+  { number:'Phase 3', name:'Animal Questions to the Client', duration:10*60,
+    instructions:{
+      client:'Listen to the questions from each animal perspective. You don\'t need to answer them all: just notice which ones open something up.',
+      supervisor:'Go round each animal in turn. Prompt: "From the [animal] perspective, what questions does this client need to be asked?" Questions only: redirect any analysis or advice back to a question.',
+      observer:'When it\'s your turn, offer your questions directly to the client. Questions only, no analysis, no advice. Speak from your perspective.'
+    },
+    checklist:[
+      'Eagle (Formative): questions offered',
+      'Tiger (Formative): questions offered',
+      'Monkey (Formative): questions offered',
+      'Swan (Normative): questions offered',
+      'Owl (Normative): questions offered',
+      'Dog (Normative): questions offered',
+      'Rabbit (Restorative): questions offered',
+      'Deer (Restorative): questions offered',
+      'Bear (Restorative): questions offered',
+      'Beaver (Generative): questions offered',
+      'Wolf (Generative): questions offered',
+      'Horse (Generative): questions offered'
+    ],
+    observerActive:true, notesPrompt:'Refine your questions before offering them&#8230;' },
+
+  { number:'Phase 4', name:'Client Reflection', duration:5*60,
+    instructions:{
+      client:'Which questions opened something up? What now feels like the most important line of inquiry? Take your time: speak from what you genuinely noticed.',
+      supervisor:'Ask the client: "Which questions opened something up? What now feels like the most important line of inquiry?" Then hold the space. Don\'t fill it.',
+      observer:'Listen to the client\'s reflection. Notice which perspectives seemed to land, and which didn\'t. What does that tell you about this case?'
+    },
+    checklist:null, observerActive:false, notesPrompt:'Note what you\'re hearing&#8230;' },
+
+  { number:'Phase 5', name:'Closing Reflection', duration:2*60,
+    instructions:{
+      client:'You\'ve heard perspectives on your case through the animal perspectives present in the room. What will you take away: a new question, an insight, or a shift in direction?',
+      supervisor:'Invite brief whole-group reflection: "What did these perspectives allow us to see in this case?" Keep it crisp, two minutes, then close.',
+      observer:'Reflect: what did your perspective reveal that might have stayed invisible? What were the limits of your perspective alone?'
+    },
+    checklist:null, observerActive:false, notesPrompt:'Your closing reflection&#8230;' }
+];
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// STATE
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+let state = { role:null, animal:null, phase:0, timer:null, timeLeft:0, running:false, notes:{} };
+
+let ss = { caseText:'', clarifyData:null, outcomeText:'', clarifyResponse:'', aiLenses:[], aiRationale:'', reflections:{}, somatic:'', unsettle:'' };
+
+let sp = { caseText:'', clarifyData:null, outcomeText:'', clarifyResponse:'', aiLenses:[], aiRationale:'', reflections:{}, intention:'' };
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// NAVIGATION
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// Copyright year
+document.getElementById('landing-copyright').textContent =
+  '&#169; ' + new Date().getFullYear() + ' Neil Ralph Associates. All rights reserved.';
+
+function restart() {
+  clearInterval(state.timer);
+  state = { role:null, animal:null, phase:0, timer:null, timeLeft:0, running:false, notes:{} };
+  ss = { caseText:'', clarifyData:null, outcomeText:'', clarifyResponse:'', aiLenses:[], aiRationale:'', reflections:{}, somatic:'', unsettle:'' };
+  sp = { caseText:'', clarifyData:null, outcomeText:'', clarifyResponse:'', aiLenses:[], aiRationale:'', reflections:{}, intention:'' };
+  const ssCaseEl = document.getElementById('ss-case-input');
+  const spCaseEl = document.getElementById('sp-case-input');
+  if (ssCaseEl) ssCaseEl.value = '';
+  if (spCaseEl) spCaseEl.value = '';
+  document.getElementById('ss-ethics-alert').classList.remove('visible');
+  document.getElementById('sp-ethics-alert').classList.remove('visible');
+  goTo('screen-landing');
+}
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// SHARED HELPERS
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function checkEthics(text, alertId, bodyId) {
+  const alertEl = document.getElementById(alertId);
+  const bodyEl  = document.getElementById(bodyId);
+  let found = null;
+  for (const p of ETHICS_PATTERNS) { if (p.pattern.test(text)) { found = p; break; } }
+  if (found) { bodyEl.textContent = found.msg; alertEl.classList.add('visible'); }
+  else { alertEl.classList.remove('visible'); }
+}
+
+function checkAdvice(text, alertId) {
+  const alertEl = document.getElementById(alertId);
+  if (ADVICE_PATTERNS.test(text)) alertEl.classList.add('visible');
+  else alertEl.classList.remove('visible');
+}
+
+function showThinkingError(titleId, subId, errorId, retryId, orbId, msg) {
+  document.getElementById(titleId).textContent = 'Something went wrong';
+  document.getElementById(subId).textContent = '';
+  document.getElementById(orbId).style.animationPlayState = 'paused';
+  const e = document.getElementById(errorId);
+  e.textContent = msg; e.classList.remove('hidden');
+  document.getElementById(retryId).classList.remove('hidden');
+}
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// GROUP MODE
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function selectRole(role) { state.role = role; state.animal = null; startSession(); }
+function selectAnimal(animal) { state.role = 'observer'; state.animal = animal; startSession(); }
+
+function startSession() {
+  state.phase = 0; state.notes = {}; state.running = false; clearInterval(state.timer);
+  renderPhase(); goTo('screen-phase');
+}
+
+function renderPhase() {
+  const p    = GROUP_PHASES[state.phase];
+  const role = state.role;
+
+  const badge = document.getElementById('role-badge');
+  if (role === 'observer' && state.animal) {
+    const a = ANIMALS[state.animal];
+    badge.textContent = a.icon + ' ' + a.name;
+    badge.style.borderColor = a.color;
+    badge.style.background  = a.color.replace('0.5','0.12');
+  } else if (role === 'supervisor') {
+    badge.textContent = '&#127919; Supervisor & Timekeeper';
+    badge.style.borderColor = 'var(--border)';
+    badge.style.background  = 'rgba(91,157,181,0.07)';
+  } else {
+    badge.textContent = '&#129681; Client';
+    badge.style.borderColor = 'var(--border)';
+    badge.style.background  = 'rgba(91,157,181,0.07)';
+  }
+
+  document.getElementById('progress-dots').innerHTML = GROUP_PHASES.map((_,i) => {
+    let c = 'dot';
+    if (i < state.phase) c += ' done';
+    if (i === state.phase) c += ' current';
+    return `<div class="${c}"></div>`;
+  }).join('');
+
+  document.getElementById('phase-number').textContent      = p.number;
+  document.getElementById('phase-name').textContent        = p.name;
+  document.getElementById('phase-instruction').textContent = p.instructions[role];
+
+  const tw = document.getElementById('timer-wrap');
+  if (role === 'supervisor') {
+    tw.classList.remove('hidden');
+    state.timeLeft = p.duration; state.running = false; clearInterval(state.timer);
+    document.getElementById('btn-startstop').textContent = '&#9654; Start';
+    document.getElementById('phase-alert').classList.remove('visible');
+    updateTimerDisplay();
+  } else {
+    tw.classList.add('hidden');
+    document.getElementById('phase-alert').classList.remove('visible');
+  }
+
+  const cl = document.getElementById('checklist-panel');
+  if (role === 'supervisor' && p.checklist) {
+    document.getElementById('checklist-items').innerHTML = p.checklist.map((item,i) =>
+      `<div class="checklist-item" id="clitem-${i}" onclick="toggleCheck(${i})"><input type="checkbox" id="chk-${i}" onclick="event.stopPropagation();toggleCheck(${i})"><label for="chk-${i}">${item}</label></div>`
+    ).join('');
+    cl.classList.remove('hidden');
+  } else cl.classList.add('hidden');
+
+  const lp = document.getElementById('lens-panel');
+  if (role === 'observer' && state.animal && p.observerActive) {
+    const a = ANIMALS[state.animal];
+    document.getElementById('lens-icon').textContent  = a.icon;
+    document.getElementById('lens-name').textContent  = a.name + ': ' + a.theme;
+    document.getElementById('lens-focus').textContent = 'Notices: ' + a.notices;
+    document.getElementById('lens-questions').innerHTML = a.questions.map(q => `<li>${q}</li>`).join('');
+    document.getElementById('lens-notice').textContent  = '&#9888; ' + a.blind;
+    lp.style.borderLeftColor = a.color.replace('0.5','0.8');
+    lp.classList.remove('hidden');
+  } else lp.classList.add('hidden');
+
+  const nw = document.getElementById('notes-wrap');
+  if (p.notesPrompt) {
+    nw.classList.remove('hidden');
+    const ta = document.getElementById('notes-area');
+    ta.placeholder = p.notesPrompt;
+    ta.value = state.notes[state.phase] || '';
+  } else nw.classList.add('hidden');
+
+  document.getElementById('btn-prev').style.visibility = state.phase === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = state.phase === GROUP_PHASES.length - 1 ? 'Close Session &#8594;' : 'Next Phase &#8594;';
+}
+
+function toggleCheck(i) {
+  const c = document.getElementById(`chk-${i}`);
+  c.checked = !c.checked;
+  document.getElementById(`clitem-${i}`).classList.toggle('checked', c.checked);
+}
+
+const CIRC = 2 * Math.PI * 60;
+
+function updateTimerDisplay() {
+  const m = Math.floor(state.timeLeft / 60), s = state.timeLeft % 60;
+  document.getElementById('timer-display').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const fr  = state.timeLeft / GROUP_PHASES[state.phase].duration;
+  const arc = document.getElementById('timer-arc');
+  arc.style.strokeDashoffset = CIRC * (1 - fr);
+  if (fr > .4) arc.style.stroke = 'var(--accent)';
+  else if (fr > .15) arc.style.stroke = '#5b8faa';
+  else arc.style.stroke = '#7a2030';
+  document.getElementById('timer-phase-label').textContent = GROUP_PHASES[state.phase].number.toUpperCase();
+}
+
+function toggleTimer() {
+  if (state.running) {
+    clearInterval(state.timer); state.running = false;
+    document.getElementById('btn-startstop').textContent = '&#9654; Resume';
+  } else {
+    state.running = true;
+    document.getElementById('btn-startstop').textContent = '&#9208; Pause';
+    state.timer = setInterval(() => {
+      if (state.timeLeft > 0) { state.timeLeft--; updateTimerDisplay(); }
+      else {
+        clearInterval(state.timer); state.running = false;
+        document.getElementById('btn-startstop').textContent = '&#9654; Restart';
+        document.getElementById('phase-alert').classList.add('visible');
+      }
+    }, 1000);
+  }
+}
+
+function resetPhaseTimer() {
+  clearInterval(state.timer); state.running = false;
+  state.timeLeft = GROUP_PHASES[state.phase].duration;
+  document.getElementById('btn-startstop').textContent = '&#9654; Start';
+  document.getElementById('phase-alert').classList.remove('visible');
+  updateTimerDisplay();
+}
+
+function saveNotes() { const ta = document.getElementById('notes-area'); if (ta) state.notes[state.phase] = ta.value; }
+
+function nextPhase() {
+  saveNotes(); clearInterval(state.timer); state.running = false;
+  if (state.phase < GROUP_PHASES.length - 1) { state.phase++; renderPhase(); }
+  else { document.getElementById('final-notes-wrap').classList.remove('hidden'); goTo('screen-close'); }
+}
+
+function prevPhase() {
+  saveNotes(); clearInterval(state.timer); state.running = false;
+  if (state.phase > 0) { state.phase--; renderPhase(); }
+}
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// ETHICS LISTENERS
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+document.getElementById('ss-case-input').addEventListener('input', function() {
+  checkEthics(this.value, 'ss-ethics-alert', 'ss-ethics-alert-body');
+});
+
+document.getElementById('sp-case-input').addEventListener('input', function() {
+  checkEthics(this.value, 'sp-ethics-alert', 'sp-ethics-alert-body');
+});
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// SHARED SYSTEM PROMPT BUILDER
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function buildAnimalList() {
+  return Object.entries(ANIMALS).map(([key, a]) =>
+    `${a.name.toUpperCase()} (${key}) &#8212; ${a.theme}\nNotices: ${a.notices}\nDefault questions: ${a.questions.join(' | ')}`
+  ).join('\n\n');
+}
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// SELF-SUPERVISION
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function ssCaseSubmit() {
+  const val = document.getElementById('ss-case-input').value.trim();
+  if (!val) {
+    const ta = document.getElementById('ss-case-input');
+    ta.focus(); ta.style.borderColor = 'rgba(122,32,48,0.7)';
+    setTimeout(() => { ta.style.borderColor = ''; }, 2000);
+    return;
+  }
+  ss.caseText = val;
+  ss.clarifyData = null; ss.aiLenses = []; ss.reflections = {}; ss.somatic = ''; ss.unsettle = '';
+  goTo('ss-thinking');
+  document.getElementById('ss-thinking-title').textContent = 'Reading what you\'re bringing&#8230;';
+  document.getElementById('ss-thinking-sub').textContent = 'Taking a moment to understand your situation.';
+  document.getElementById('ss-thinking-error').classList.add('hidden');
+  document.getElementById('ss-thinking-retry').classList.add('hidden');
+  document.getElementById('ss-thinking-orb').style.animationPlayState = 'running';
+  callClaudeForClarification('ss', val);
+}
+
+async function callClaudeForClarification(mode, caseText) {
+  const isSS = mode === 'ss';
+  const modeContext = isSS
+    ? 'The coach is using a self-supervision tool. They want to reflect on their practice independently between human supervision sessions.'
+    : 'The coach is preparing for an upcoming human supervision session. They want to arrive ready, with their thinking clarified.';
+
+  const systemPrompt = `You are a coaching supervision assistant working with the Supervision Council tool, which uses twelve animal perspectives for reflective practice.
+
+${modeContext}
+
+The four supervisory domains are:
+- Formative: coach's learning and development (Eagle, Tiger, Monkey)
+- Normative: professional standards, ethics, boundaries (Swan, Owl, Dog)
+- Restorative: coach's wellbeing and the relational quality of work (Rabbit, Deer, Bear)
+- Generative: patterns across practice, sustainability, recurring themes (Beaver, Wolf, Horse)
+
+Your task: read what the coach has written and return:
+1. A plain-language summary (2-3 sentences) of what you understand they are bringing. Write this directly to them, starting with "It sounds like..." or similar. Be specific, not generic.
+2. One or two focused questions to sharpen the picture. These should surface what is still unclear or what would most help you select the right perspectives later.
+3. The primary supervisory domain (formative/normative/restorative/generative) that seems most relevant. This will not be shown to the user; it informs the next step.
+
+Return ONLY valid JSON, no markdown, no preamble:
+{
+  "summary": "Plain-language summary of what they are bringing.",
+  "questions": ["Question 1?", "Question 2?"],
+  "domain": "formative"
+}
+
+Valid domain values: formative, normative, restorative, generative.`;
+
+  try {
+    const response = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: caseText }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rawText = data.content.map(b => b.type === 'text' ? b.text : '').join('').trim();
+    const clean = rawText.replace(/^```[a-z]*\n?/, '').replace(/```$/, '').trim();
+    const parsed = JSON.parse(clean);
+
+    if (isSS) {
+      ss.clarifyData = parsed;
+      buildClarifyScreen('ss', parsed);
+      goTo('ss-clarify');
+    } else {
+      sp.clarifyData = parsed;
+      buildClarifyScreen('sp', parsed);
+      goTo('sp-clarify');
+    }
+
+  } catch(err) {
+    const errMsg = 'Unable to reach the AI: ' + err.message + '\n\nCheck your connection and try again.';
+    if (isSS) {
+      showThinkingError('ss-thinking-title','ss-thinking-sub','ss-thinking-error','ss-thinking-retry','ss-thinking-orb', errMsg);
+    } else {
+      showThinkingError('sp-thinking-title','sp-thinking-sub','sp-thinking-error','sp-thinking-retry','sp-thinking-orb', errMsg);
+    }
+  }
+}
+
+function buildClarifyScreen(mode, parsed) {
+  document.getElementById(`${mode}-clarify-summary`).textContent = parsed.summary || '';
+  const qContainer = document.getElementById(`${mode}-clarify-questions`);
+  if (parsed.questions && parsed.questions.length) {
+    qContainer.innerHTML = parsed.questions.map(q => `<div class="clarify-q-item">${escHtml(q)}</div>`).join('');
+    document.getElementById(`${mode}-clarify-questions-wrap`).classList.remove('hidden');
+  } else {
+    document.getElementById(`${mode}-clarify-questions-wrap`).classList.add('hidden');
+  }
+  document.getElementById(`${mode}-outcome-input`).value = '';
+  document.getElementById(`${mode}-clarify-response`).value = '';
+  document.getElementById(`${mode}-advice-alert`).classList.remove('visible');
+}
+
+document.getElementById('ss-outcome-input').addEventListener('input', function() {
+  checkAdvice(this.value, 'ss-advice-alert');
+});
+
+document.getElementById('sp-outcome-input').addEventListener('input', function() {
+  checkAdvice(this.value, 'sp-advice-alert');
+});
+
+function ssClarifySubmit() {
+  ss.outcomeText      = document.getElementById('ss-outcome-input').value.trim();
+  ss.clarifyResponse  = document.getElementById('ss-clarify-response').value.trim();
+  goTo('ss-thinking2');
+  document.getElementById('ss-thinking2-error').classList.add('hidden');
+  document.getElementById('ss-thinking2-retry').classList.add('hidden');
+  document.getElementById('ss-thinking2-orb').style.animationPlayState = 'running';
+  callClaudeForLenses('ss');
+}
+
+async function callClaudeForLenses(mode) {
+  const isSS    = mode === 'ss';
+  const stateObj = isSS ? ss : sp;
+  const modeContext = isSS
+    ? 'The coach is self-supervising: reflecting on their practice independently. Select perspectives that open up reflective inquiry. Questions should be in the first person and invite introspection.'
+    : 'The coach is preparing for a human supervision session. Select perspectives that help them articulate what they are bringing and arrive ready. Questions should be forward-facing and preparation-oriented.';
+
+  const domainHints = {
+    formative:   'Lean toward Eagle, Tiger, Monkey, but choose what fits best.',
+    normative:   'Lean toward Swan, Owl, Dog, but choose what fits best.',
+    restorative: 'Lean toward Rabbit, Deer, Bear, but choose what fits best.',
+    generative:  'Lean toward Beaver, Wolf, Horse, but choose what fits best.'
+  };
+  const domain = stateObj.clarifyData?.domain || 'formative';
+  const domainHint = domainHints[domain] || '';
+
+  const systemPrompt = `You are a coaching supervision assistant for the Supervision Council tool.
+
+${modeContext}
+
+The twelve animal perspectives are:
+${buildAnimalList()}
+
+Supervisory domain identified from intake: ${domain}. ${domainHint}
+
+Select 2-3 perspectives most relevant to this coach's specific situation. Generate 3 questions per perspective, tailored to what they have written, not generic defaults. Keep each question to one sentence. Frame questions in the first person.
+
+Return ONLY valid JSON, no markdown, no preamble:
+{
+  "rationale": "2-3 sentences explaining why these perspectives were chosen. Be specific about what in their writing led you to them.",
+  "lenses": [
+    {
+      "key": "tiger",
+      "reason": "One sentence explaining why this perspective is relevant, written directly to the coach using you/your, not the coach.",
+      "questions": ["Q1?","Q2?","Q3?"]
+    }
+  ]
+}
+
+Valid key values: eagle, tiger, monkey, swan, owl, dog, rabbit, deer, bear, beaver, wolf, horse. Select 2 or 3 only.`;
+
+  const userContent = `Original case:\n${stateObj.caseText}\n\nApp's understanding: ${stateObj.clarifyData?.summary || ''}\n\nCoach's clarification: ${stateObj.clarifyResponse || '(none provided)'}\n\nWhat a good outcome looks like: ${stateObj.outcomeText || '(not specified)'}`;
+
+  try {
+    const response = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userContent }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rawText = data.content.map(b => b.type === 'text' ? b.text : '').join('').trim();
+    const clean   = rawText.replace(/^```[a-z]*\n?/, '').replace(/```$/, '').trim();
+    const parsed  = JSON.parse(clean);
+
+    if (!parsed.lenses || !Array.isArray(parsed.lenses) || parsed.lenses.length < 2)
+      throw new Error('Unexpected response format. Please try again.');
+
+    parsed.lenses.forEach(l => { if (!ANIMALS[l.key]) throw new Error(`Unknown key: ${l.key}`); });
+
+    stateObj.aiLenses   = parsed.lenses;
+    stateObj.aiRationale = parsed.rationale || '';
+
+    if (isSS) { buildSSReflectScreen(); goTo('ss-reflect'); }
+    else       { buildSPFocusScreen();  goTo('sp-focus'); }
+
+  } catch(err) {
+    const errMsg = 'Unable to reach the AI: ' + err.message + '\n\nCheck your connection and try again.';
+    if (isSS) {
+      showThinkingError('ss-thinking-title','ss-thinking-sub','ss-thinking2-error','ss-thinking2-retry','ss-thinking2-orb', errMsg);
+      document.getElementById('ss-thinking2-error').classList.remove('hidden');
+    } else {
+      document.getElementById('sp-thinking2-error').textContent = errMsg;
+      document.getElementById('sp-thinking2-error').classList.remove('hidden');
+      document.getElementById('sp-thinking2-retry').classList.remove('hidden');
+      document.getElementById('sp-thinking2-orb').style.animationPlayState = 'paused';
+    }
+  }
+}
+
+function buildSSReflectScreen() {
+  document.getElementById('ss-ai-rationale').textContent = ss.aiRationale;
+  document.getElementById('ss-somatic-input').value = ss.somatic || '';
+  document.getElementById('ss-unsettle-input').value = ss.unsettle || '';
+
+  const container = document.getElementById('ss-reflect-blocks');
+  container.innerHTML = ss.aiLenses.map(lens => {
+    const a = ANIMALS[lens.key];
+    const borderCol = a.color.replace('0.5','0.85');
+    const qs = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    return `
+      <div class="ss-lens-block" style="border-left-color:${borderCol}">
+        <div class="ss-lens-block-header">
+          <div class="ss-lens-block-icon">${a.icon}</div>
+          <div>
+            <div class="ss-lens-block-name">${a.name}: ${a.theme}</div>
+            <div class="ss-lens-block-theme">Notices: ${a.notices}</div>
+          </div>
+        </div>
+        <div class="ss-lens-block-reason">${escHtml(lens.reason || '')}</div>
+        <ul class="ss-q-list">${qs.map(q => `<li>${escHtml(q)}</li>`).join('')}</ul>
+        <div class="ss-reflect-label">Your reflection</div>
+        <textarea class="ss-reflect-area" id="ssrefl-${lens.key}"
+          placeholder="What does this perspective surface for you? What do you notice? Which question stays with you?"
+          rows="4">${escHtml(ss.reflections[lens.key] || '')}</textarea>
+      </div>`;
+  }).join('');
+}
+
+function ssReflectNext() {
+  ss.somatic  = document.getElementById('ss-somatic-input').value;
+  ss.unsettle = document.getElementById('ss-unsettle-input').value;
+  ss.aiLenses.forEach(lens => {
+    const ta = document.getElementById(`ssrefl-${lens.key}`);
+    if (ta) ss.reflections[lens.key] = ta.value;
+  });
+  buildSSSummary();
+  goTo('ss-summary');
+}
+
+function buildSSSummary() {
+  const el = document.getElementById('ss-summary-content');
+
+  const caseHtml = `<div class="summary-section-label">What I brought</div><div class="summary-case"><em>"${escHtml(ss.caseText)}"</em></div>`;
+
+  const outcomeHtml = ss.outcomeText ? `
+    <div class="summary-outcome">
+      <div class="summary-outcome-label">What a good outcome looks like</div>
+      ${escHtml(ss.outcomeText)}
+    </div>` : '';
+
+  const somaticHtml = ss.somatic ? `
+    <div class="summary-somatic">
+      <div class="summary-somatic-label">Embodied response before reading</div>
+      ${escHtml(ss.somatic)}
+    </div>` : '';
+
+  const lensesHtml = ss.aiLenses.map(lens => {
+    const a    = ANIMALS[lens.key];
+    const qs   = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    const refl = ss.reflections[lens.key] || '';
+    return `
+      <div class="summary-lens">
+        <div class="summary-lens-head">
+          <div class="summary-lens-icon">${a.icon}</div>
+          <div class="summary-lens-name">${a.name}: ${a.theme}</div>
+        </div>
+        <div>${qs.map(q => `<div class="summary-q">${escHtml(q)}</div>`).join('')}</div>
+        ${refl ? `<div class="summary-reflection">${escHtml(refl)}</div>` : `<div class="summary-reflection-empty">No reflection written.</div>`}
+      </div>`;
+  }).join('');
+
+  const unsettleHtml = ss.unsettle ? `
+    <div class="summary-unsettle">
+      <div class="summary-unsettle-label">The question I most wanted to avoid</div>
+      ${escHtml(ss.unsettle)}
+    </div>` : '';
+
+  el.innerHTML = caseHtml + outcomeHtml + somaticHtml + lensesHtml + unsettleHtml;
+}
+
+function ssCopy() {
+  let text = 'THE SUPERVISION COUNCIL: SELF-SUPERVISION\n' + '&#9552;'.repeat(42) + '\n\n';
+  text += 'WHAT I BROUGHT\n' + '&#9472;'.repeat(20) + '\n' + ss.caseText + '\n\n';
+  if (ss.outcomeText) text += 'WHAT A GOOD OUTCOME LOOKS LIKE\n' + '&#9472;'.repeat(20) + '\n' + ss.outcomeText + '\n\n';
+  if (ss.aiRationale) text += 'WHY THESE PERSPECTIVES\n' + '&#9472;'.repeat(20) + '\n' + ss.aiRationale + '\n\n';
+  if (ss.somatic)     text += 'EMBODIED RESPONSE\n' + '&#9472;'.repeat(20) + '\n' + ss.somatic + '\n\n';
+  ss.aiLenses.forEach(lens => {
+    const a  = ANIMALS[lens.key];
+    const qs = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    text += a.name.toUpperCase() + ': ' + a.theme + '\n' + '&#9472;'.repeat(20) + '\n';
+    qs.forEach(q => { text += '  &#8212; ' + q + '\n'; });
+    text += '\nMy reflection:\n' + (ss.reflections[lens.key] || '(none)') + '\n\n';
+  });
+  if (ss.unsettle) text += 'THE QUESTION I MOST WANTED TO AVOID\n' + '&#9472;'.repeat(20) + '\n' + ss.unsettle + '\n\n';
+  text += '&#9472;'.repeat(42) + '\nGenerated using The Supervision Council. Bring this to your next human supervision session.\n';
+
+  navigator.clipboard.writeText(text).then(() => {
+    const el = document.getElementById('ss-copy-confirm');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  });
+}
+
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+// SUPERVISION PREP
+// &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+
+function spCaseSubmit() {
+  const val = document.getElementById('sp-case-input').value.trim();
+  if (!val) {
+    const ta = document.getElementById('sp-case-input');
+    ta.focus(); ta.style.borderColor = 'rgba(122,32,48,0.7)';
+    setTimeout(() => { ta.style.borderColor = ''; }, 2000);
+    return;
+  }
+  sp.caseText = val;
+  sp.clarifyData = null; sp.aiLenses = []; sp.reflections = {}; sp.intention = '';
+  goTo('sp-thinking');
+  document.getElementById('sp-thinking-title').textContent = 'Reading what you\'re bringing&#8230;';
+  document.getElementById('sp-thinking-sub').textContent   = 'Taking a moment to understand your situation.';
+  document.getElementById('sp-thinking-error').classList.add('hidden');
+  document.getElementById('sp-thinking-retry').classList.add('hidden');
+  document.getElementById('sp-thinking-orb').style.animationPlayState = 'running';
+  callClaudeForClarification('sp', val);
+}
+
+function spClarifySubmit() {
+  sp.outcomeText     = document.getElementById('sp-outcome-input').value.trim();
+  sp.clarifyResponse = document.getElementById('sp-clarify-response').value.trim();
+  goTo('sp-thinking2');
+  document.getElementById('sp-thinking2-error').classList.add('hidden');
+  document.getElementById('sp-thinking2-retry').classList.add('hidden');
+  document.getElementById('sp-thinking2-orb').style.animationPlayState = 'running';
+  callClaudeForLenses('sp');
+}
+
+function buildSPFocusScreen() {
+  document.getElementById('sp-ai-rationale').textContent = sp.aiRationale;
+  document.getElementById('sp-intention-input').value    = sp.intention || '';
+
+  const container = document.getElementById('sp-focus-blocks');
+  container.innerHTML = sp.aiLenses.map(lens => {
+    const a = ANIMALS[lens.key];
+    const borderCol = a.color.replace('0.5','0.85');
+    const qs = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    return `
+      <div class="ss-lens-block" style="border-left-color:${borderCol}">
+        <div class="ss-lens-block-header">
+          <div class="ss-lens-block-icon">${a.icon}</div>
+          <div>
+            <div class="ss-lens-block-name">${a.name}: ${a.theme}</div>
+            <div class="ss-lens-block-theme">Notices: ${a.notices}</div>
+          </div>
+        </div>
+        <div class="ss-lens-block-reason">${escHtml(lens.reason || '')}</div>
+        <ul class="ss-q-list">${qs.map(q => `<li>${escHtml(q)}</li>`).join('')}</ul>
+        <div class="ss-reflect-label">My thinking on this</div>
+        <textarea class="ss-reflect-area" id="sprefl-${lens.key}"
+          placeholder="What does this perspective surface as I prepare? What becomes clearer?"
+          rows="4">${escHtml(sp.reflections[lens.key] || '')}</textarea>
+      </div>`;
+  }).join('');
+}
+
+function spFocusNext() {
+  sp.intention = document.getElementById('sp-intention-input').value;
+  sp.aiLenses.forEach(lens => {
+    const ta = document.getElementById(`sprefl-${lens.key}`);
+    if (ta) sp.reflections[lens.key] = ta.value;
+  });
+  buildSPSummary();
+  goTo('sp-summary');
+}
+
+function buildSPSummary() {
+  const el = document.getElementById('sp-summary-content');
+
+  const caseHtml = `<div class="summary-section-label">The case I am bringing</div><div class="summary-case"><em>"${escHtml(sp.caseText)}"</em></div>`;
+
+  const outcomeHtml = sp.outcomeText ? `
+    <div class="summary-outcome">
+      <div class="summary-outcome-label">What a good outcome from this session looks like</div>
+      ${escHtml(sp.outcomeText)}
+    </div>` : '';
+
+  const lensesHtml = sp.aiLenses.map(lens => {
+    const a    = ANIMALS[lens.key];
+    const qs   = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    const refl = sp.reflections[lens.key] || '';
+    return `
+      <div class="summary-lens">
+        <div class="summary-lens-head">
+          <div class="summary-lens-icon">${a.icon}</div>
+          <div class="summary-lens-name">${a.name}: ${a.theme}</div>
+        </div>
+        <div>${qs.map(q => `<div class="summary-q">${escHtml(q)}</div>`).join('')}</div>
+        ${refl ? `<div class="summary-reflection">${escHtml(refl)}</div>` : `<div class="summary-reflection-empty">No notes added.</div>`}
+      </div>`;
+  }).join('');
+
+  const intentionHtml = sp.intention ? `
+    <div class="summary-intention">
+      <div class="summary-intention-label">What I most want my supervisor to know</div>
+      ${escHtml(sp.intention)}
+    </div>` : '';
+
+  el.innerHTML = caseHtml + outcomeHtml + lensesHtml + intentionHtml;
+}
+
+function spCopy() {
+  const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  let text = 'THE SUPERVISION COUNCIL: SUPERVISION PREPARATION NOTE\n' + '&#9552;'.repeat(52) + '\n' + date + '\n\n';
+  text += 'THE CASE I AM BRINGING\n' + '&#9472;'.repeat(20) + '\n' + sp.caseText + '\n\n';
+  if (sp.outcomeText) text += 'WHAT A GOOD OUTCOME LOOKS LIKE\n' + '&#9472;'.repeat(20) + '\n' + sp.outcomeText + '\n\n';
+  sp.aiLenses.forEach(lens => {
+    const a  = ANIMALS[lens.key];
+    const qs = (lens.questions && lens.questions.length) ? lens.questions : a.questions;
+    text += a.name.toUpperCase() + ': ' + a.theme + '\n' + '&#9472;'.repeat(20) + '\n';
+    qs.forEach(q => { text += '  &#8212; ' + q + '\n'; });
+    text += '\nMy thinking:\n' + (sp.reflections[lens.key] || '(none)') + '\n\n';
+  });
+  if (sp.intention) text += 'WHAT I MOST WANT MY SUPERVISOR TO KNOW\n' + '&#9472;'.repeat(20) + '\n' + sp.intention + '\n\n';
+  text += '&#9472;'.repeat(52) + '\nPrepared using The Supervision Council.\n';
+
+  navigator.clipboard.writeText(text).then(() => {
+    const el = document.getElementById('sp-copy-confirm');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  });
+}
+
+</script>
+</body>
+</html>
