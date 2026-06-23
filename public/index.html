@@ -1429,7 +1429,7 @@ Valid domain values: formative, normative, restorative, generative.`;
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 800,
         system: systemPrompt,
         messages: [{ role: 'user', content: caseText }]
@@ -1546,7 +1546,7 @@ Valid key values: eagle, tiger, monkey, swan, owl, dog, rabbit, deer, bear, beav
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1500,
         system: systemPrompt,
         messages: [{ role: 'user', content: userContent }]
