@@ -1,76 +1,41 @@
-// Cloudflare Pages Function: proxy to the Anthropic Messages API.
-// File location is significant: functions/api/claude.js maps to the path /api/claude.
-//
-// The ANTHROPIC_API_KEY environment variable must be set in the Cloudflare Pages
-// project settings (Settings > Environment variables) and marked as Encrypted.
-
-export async function onRequest(context) {
-  const { request, env } = context;
-
-  // CORS preflight
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(),
-    });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (request.method !== "POST") {
-    return jsonError(405, "Method not allowed. Use POST.");
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  if (!env.ANTHROPIC_API_KEY) {
-    return jsonError(
-      500,
-      "Server is missing ANTHROPIC_API_KEY. Set it in Cloudflare Pages > Settings > Environment variables."
-    );
-  }
-
-  let body;
-  try {
-    body = await request.json();
-  } catch (err) {
-    return jsonError(400, "Request body must be valid JSON.");
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'API key not configured on server.' });
   }
 
   try {
-    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
-        "x-api-key": env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(req.body)
     });
 
-    const text = await upstream.text();
-    return new Response(text, {
-      status: upstream.status,
-      headers: {
-        "content-type": "application/json",
-        ...corsHeaders(),
-      },
-    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(data);
+    }
+
+    return res.status(200).json(data);
+
   } catch (err) {
-    return jsonError(502, "Upstream request to Anthropic failed: " + (err && err.message ? err.message : String(err)));
+    return res.status(500).json({ error: 'Proxy error: ' + err.message });
   }
-}
-
-function corsHeaders() {
-  return {
-    "access-control-allow-origin": "*",
-    "access-control-allow-methods": "POST, OPTIONS",
-    "access-control-allow-headers": "content-type",
-  };
-}
-
-function jsonError(status, message) {
-  return new Response(JSON.stringify({ error: { message } }), {
-    status,
-    headers: {
-      "content-type": "application/json",
-      ...corsHeaders(),
-    },
-  });
 }
